@@ -6,12 +6,14 @@ import time
 # from RPLCD import RPLCD
 # lcd = CharLCD(cols = 16, rows=2, pin_rs=37, pin_e=35, pins_data=(33,31, ))
 
-name = ""
+# Global variables
+card_number = ""
 loop = True
 login = False
 user_list = []
 
 
+# This function will display "start-up" screen for our device
 def boot_up():
     # lcd.cursor_pos = (0, 0)
     # lcd.write_string(u"MACHINE ONE")
@@ -25,12 +27,14 @@ def boot_up():
     time.sleep(1)
 
 
-def add_user(new_name):
+# Function - add_user: opens a new file to add the card number
+def add_user(new_user):
     user_file = open("fabList.txt", "a")
-    user_file.write(new_name + '\n')
+    user_file.write(new_user + '\n')
     user_file.close()
 
 
+# Function - dectect_user: reads the card numbers in the file and adds it to user_list
 def detect_user():
     user_file = open("fabList.txt", "r")
     temp_list = user_file.readlines()
@@ -43,36 +47,37 @@ def detect_user():
     print(user_list)
 
 
+# This is the main loop that will run at launch
 while loop:
     boot_up()
 
     detect_user()
 
-    name = input()
+    card_number = input()
 
     # lcd.cursor_pos = (0,0)
-    if name == "stop":
+    if card_number == "stop":
         loop = False
         # lcd.clear()
         # lcd.write_string(u"SYSTEM OFF...")
         print('SYSTEM OFF...')  # Dev code
-    elif name in user_list:
+    elif card_number in user_list:
         loop = False
-        print('Welcome back ' + name)
+        print('Welcome back ' + card_number)
     else:
         loop = False
         # lcd.clear()
 
         # lcd.write_string(u"Welcome ")
-        # lcd.write_string(name)
-        print('Welcome ' + name)  # Dev code
-        add_user(name)
+        # lcd.write_string(card_number)
+        print('Welcome ' + card_number)  # Dev code
+        add_user(card_number)
 
         time.sleep(5)
         # lcd.clear()
 
     '''
-    elif name == "":
+    elif card_number == "":
         lcd.clear()
         lcd.write_string(u"BLANK ERROR...")
         time.sleep(3)
