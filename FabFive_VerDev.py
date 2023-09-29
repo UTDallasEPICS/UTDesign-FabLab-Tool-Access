@@ -1,24 +1,23 @@
-# FabFive Software, Version: Development Code (DevC 0.3)
-# DevC 0.3 Button Input Functionality Added
+# FabFive Software, Version: Development Code (DevC 0.4)
+# DevC 0.4 Changes according to new plan: DesignModel2023Sept28. Switched to csv file format.
 # Author: Ammar Mohammed
 import time
+import csv
 import RPi.GPIO as GPIO
-from RPLCD import CharLCD
 
-# Setup Button Pins
-GPIO.setmode(GPIO.BOARD)
-button1 = 18  # yes button
-button2 = 16  # no button
-GPIO.setup(button1,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-GPIO.setup(button2,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-
-#BUG AT THIS LINE, when ever this line is uncommented,
-#it somehow makes the program think button1 at pin 18 is pressed
-#lcd = CharLCD(cols = 16, rows=2, pin_rs=37, pin_e=35, pins_data=(33,31, 29, 23), numbering_mode=GPIO.BOARD)
-
-# Global variables
 loop = True
-user_list = []
+
+button1 = 16
+button2 = 18
+GPIO.setup(button1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+card_numbers = []
+are_admins = []
+
+user_index = -1
+minutes = 5
+time_duration = minutes * 60
 
 
 class CardUser:
@@ -31,107 +30,128 @@ class CardUser:
 
 # This function will display "start-up" screen for our device
 def boot_up():
-    #lcd.cursor_pos = (0, 0)
-    #lcd.write_string(u"MACHINE ONE")
     print('MACHINE ONE')  # Dev code
-
     time.sleep(1)
-    #lcd.cursor_pos = (1, 0)
-    #lcd.write_string(u"Please scan card")
+
     print('Please scan card')  # Dev code
-
     time.sleep(1)
 
 
-# Function - dectect_user: reads the card numbers in the file and adds it to user_list
-def detect_user():
-    user_file = open("fabList.txt", "r")
-    temp_list = user_file.readlines()
-    user_file.close()
+def admin_menu():
+    button_response = True
+    print('1. Add user?')
+    print('2. Remove user?')
 
-    for user in temp_list:
-        user = user.strip('\n')
-        user_list.append(user)
-
-    print(user_list)
-
-
-# Function - add_user: opens a new file to add the card number
-def add_user(new_user):
-    admin_mode = True  # var for while loop to wait for button response
-    user_create_process = False
-    
-    print('Call Admin!')  # Perhaps we can have machine beep, or send ping to website
-    # If admin at station, request admin to scan admin card
-    print('Add user to system?')
-    
-    while admin_mode:
-        time.sleep(.3)
-        print('Yes Button: ' + str(GPIO.input(button1)))
-        print('No Button: ' + str(GPIO.input(button2)))
-        if GPIO.input(button1) == 0:  # 0 means pressed
-            admin_mode = False
-            print('Access granted!')
-            user_file = open("fabList.txt", "a")
-            user_file.write(new_user + ' ')
-            user_file.close()
-            print('User added')
-            user_create_process = True
-
-        elif GPIO.input(button2) == 0:
-            admin_mode = False
-            print('Access denied!')
-    
-    if user_create_process:
-        print('Is user admin?')
-    while user_create_process:
-        time.sleep(.5)
-        # Read button inputs again
+    while button_response:
+        # Add user sub-menu
         if GPIO.input(button1) == 0:
-            user_file = open("fabList.txt", "a")
-            user_file.write('ADMIN' + '\n')
-            user_file.close()
-	    print('user set to admin')
-	    user_create_process = False
-        elif GPIO.input(button2) == 0:
-            user_file = open("fabList.txt", "a")
-            user_file.write('DEFAULT' + '\n')
-            user_file.close()
-	    print('user set to default')
-	    user_create_process = False
-              
-# This is the main loop that will run at launch
+            button_response = False
+            button_response1 = True
+
+            print('ADD USER')
+            print('Please scan card')
+            user_add = input()
+
+            print('Set user as admin?')
+            while button_response1:
+                time.sleep(0.5)
+                if GPIO.input(button1) == 0:
+                    button_response1 = False
+                    print('User set to admin')
+                    add_user(user_add, True)
+
+                if GPIO.input(button2) == 0:
+                    button_response1 = False
+                    print('User set to default')
+                    add_user(user_add, False)
+
+        # Remove user sub-menu
+        if GPIO.input(button2) == 0:
+            button_response = False
+            print('REMOVE USER')
+            print('Please scan card')
+            user_remove = input()
+            remove_user(user_remove)
+
+
+        time.sleep(0.5)
+
+
+# check is user already in system
+def add_user(user, is_admin):
+    if user not in card_numbers:
+        with open("fablist.csv", "a") as user_file:
+            csv_writer = csv.writer(user_file)
+            csv_writer.writerow([user] + [str(is_admin)])
+            card_numbers.append(user)
+            are_admins.append(is_admin)
+        print('User added')
+
+
+def remove_user(user):
+    if user in card_numbers:
+        temp_index = card_numbers.index(user)
+        card_numbers.remove(user)
+        are_admins.pop(temp_index)
+        print('User removed')
+        with open("fablist.csv", "w") as user_file:
+            csv_writer = csv.writer(user_file, delimiter=',')
+            counter = 0
+            while counter < len(card_numbers):
+                csv_writer.writerow([card_numbers[counter]] + [str(are_admins[counter])])
+                counter += 1
+        print('File updated')
+
+
 while loop:
-    boot_up()  # display welcome message
+    boot_up()
 
-    card_number = raw_input()  # retrieve card number
-    current_user = CardUser(card_number)  # add card number to class
-    
+    card_number = input()  # DEV CODE
+    current_user = CardUser(card_number)
+
+    # Read list from file
     try:
-        detect_user()  # load in current user list
-        print('users detected')
-    except:
-        print('File Does NOT Exist!')
-    finally:
-        print('process complete')
+        user_file = open("fablist.csv", "r")
+        csv_reader = csv.reader(user_file)
 
-    #lcd.cursor_pos = (0,0)
-    if card_number == "stop":  # developer bypass functionality
-        loop = False
-        #lcd.clear()
-        #lcd.write_string(u"SYSTEM OFF...")
-        print('SYSTEM OFF...')  # Dev code
-    elif current_user.number in user_list:  # if user is found in list, grant access
-        loop = False
-        print('Welcome back ' + current_user.number)
-    else:  # if user is not in list, goto add_user method
-        loop = False
-        #lcd.clear()
+        for line in csv_reader:
+            card_numbers.append(line[0])
+            are_admins.append(bool(line[1]))
 
-        #lcd.write_string(u"Welcome ")
-        #lcd.write_string(current_user.number)
-        print('Welcome ' + current_user.number)  # Dev code
-        add_user(current_user.number)
+        user_file.close()
+    except FileNotFoundError:
+        print('FILE NOT FOUND')
+        # user_file = open("fablist.csv", "a")
+        with open("fablist.csv", "w") as user_file:
+            csv_writer = csv.writer(user_file, delimiter=',')
 
-        time.sleep(5)
-        #lcd.clear()
+        print('Created file')
+
+    # See if user is already in list
+    # If user is default, accept, turn on machine and timer
+    if current_user.number in card_numbers:
+        print('User recognized')
+        print('Welcome back')
+        user_index = card_number.index(current_user.number)
+        current_user.is_admin = are_admins[user_index]
+
+    # If user not recognized, deny access, just say "To get added call Admin"
+    if user_index == -1:
+        print('User not found')
+        print('To join the system, call admin for assistance')
+    # if user is found
+    else:
+        # If admin scans launch admin menu (function)
+        if current_user.is_admin:
+            admin_menu()
+        # else turn on machine and start timer
+        else:
+            while time_duration > 0:
+                print(time_duration)
+                # Timer escape feature
+                if GPIO.input(button2) == 0:
+                    print('Exited timer')
+                    break
+                time.sleep(1)
+                time_duration -= 1
+            print('Finished timer')
