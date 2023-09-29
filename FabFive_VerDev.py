@@ -1,5 +1,12 @@
 # FabFive Software, Version: Development Code (DevC 0.4)
-# DevC 0.4 Changes according to new plan: DesignModel2023Sept28. Switched to csv file format.
+'''
+DevC 0.4 Changes according to new plan: DesignModel2023Sept28. 
+- Switched to csv file format to store user data
+- Added admin menu
+- Modified the way users are accepted or denied
+- Modified the way users are added or removed
+- Added countdown timer with escape feature
+'''
 # Author: Ammar Mohammed
 import time
 import csv
