@@ -1,15 +1,10 @@
-# FabFive Software, Version: Development Code (DevC 0.5)
+# FabFive Software, Version: Development Code (DevC 0.6)
 """
-DevC 0.5
+DevC 0.6
 Added:
-- Machine Activation
-- Variable timer: shorter or longer timer based on whether user is default or admin respectively
-Debug:
-- Fixed code in main loop where user index was falsely identified:
-  user_index = card_number.index(current_user.number) when it should have been user_index = card_numbers.index(current_user.number)
-- Readjusted admin identifier to be 0 and 1 instead of "True" and "False" to avoid 'Truthy' error. <- when reading from files and adding to list
-- Adjusted code so that 'button2' option in admin mode for set user to default in "add user" sub-menu does not take user to "remove user" sub-menu.
-- For developer mode, user can input 'y' and 'n' in place of 'button1' and 'button2' respectively.
+-Completed code for scrolling text
+-Added more LCD code (user now able to use system with LCD prompts):
+  -LCD code added in places like admin menus and timer
 """
 # Author: Ammar Mohammed
 import time
@@ -66,7 +61,7 @@ def admin_menu():
     lcd.cursor_pos = (0, 0)
     lcd.write_string('1. Add user?')
     lcd.cursor_pos = (1, 0)
-    lcd.write_string('2.Remove user?')
+    lcd.write_string('2. Remove user?')
 
     print('1. Add user?')
     print('2. Remove user?')
@@ -139,6 +134,13 @@ def admin_menu():
         elif GPIO.input(button2) == 0:
             # elif dev_input == "n":  # DEV CODE
             button_response = False
+            
+            lcd.clear()
+            lcd.cursor_pos = (0,0)
+            lcd.write_string('REMOVE USER')
+            lcd.cursor_pos = (1,0)
+            lcd.write_string('Please scan card')
+            
             print('REMOVE USER')
             print('Please scan card')
             user_remove = input()
@@ -189,6 +191,12 @@ def remove_user(user):
         temp_index = card_numbers.index(user)
         card_numbers.remove(user)
         are_admins.pop(temp_index)
+        
+        lcd.clear()
+        lcd.cursor_pos = (0,0)
+        lcd.write_string('User now removed')
+        time.sleep(1)
+        
         print('User removed')
         with open("fablist.csv", "w") as user_file:
             csv_writer = csv.writer(user_file, delimiter=',')
@@ -201,6 +209,11 @@ def remove_user(user):
             print('File updated')
     # if user was not in the user list
     else:
+        lcd.clear()
+        lcd.cursor_pos = (0,0)
+        lcd.write_string('User not in list!')
+        scroll_text('removal process cancelled', 1)
+        
         print('user not found in list')
         print('removal process cancelled')
 
@@ -209,26 +222,39 @@ def remove_user(user):
 def timer(time_duration):
     GPIO.output(machine_pin, True)  # turn on machine
     time.sleep(1)  # buffer button2 input
+    
     while time_duration > 0:
         lcd.cursor_pos = (0, 0)
         lcd.write_string('Seconds: ' + str(time_duration))
+        lcd.cursor_pos = (1,0)
+        lcd.write_string('Exit: Button 2')
 
         print(time_duration)
         # Timer escape feature
         if GPIO.input(button2) == 0:
             print('Exited timer')
+            lcd.cursor_pos = (0,0)
+            lcd.write_string('EXIT TIMER...')
+            time.sleep(1)
             break
         time.sleep(1)
         time_duration -= 1
         lcd.clear()
     GPIO.output(machine_pin, False)  # turn off machine
+    
+    lcd.clear()
+    lcd.cursor_pos = (0,0)
+    lcd.write_string('Timer finished!')
+    time.sleep(1)
+    lcd.clear()
+    
     print('Finished timer')
 
 
 def scroll_text(long_text, line_number):
     length_text = len(long_text)
     for i in range(length_text):
-        if (15 - i) != -1:
+        if (15 - i) > -1:
             lcd.cursor_pos = (line_number, (15 - i))
             lcd.write_string(long_text)
         else:
@@ -241,6 +267,8 @@ def scroll_text(long_text, line_number):
 
 # This while loop is the main loop
 while loop:
+    time.sleep(1)
+    lcd.clear()
     user_index = -1
     card_numbers = []
     are_admins = []
@@ -315,18 +343,26 @@ while loop:
             print('Access admin menu or use machine?')
             button_response = True
 
+            lcd.clear()
+            lcd.cursor_pos = (0,0)
+            lcd.write_string('1. Admin Menu')
+            lcd.cursor_pos = (1,0)
+            lcd.write_string('2. Use Machine')
+
             while button_response:
                 time.sleep(1)
                 # dev_input = input()  # DEV CODE
                 # if dev_input == "y":  # DEV CODE
                 if GPIO.input(button1) == 0:
+                    lcd.clear()
                     button_response = False
                     admin_menu()
                 # elif dev_input == "n":  # DEV CODE
                 elif GPIO.input(button2) == 0:
                     button_response = False
                     print('should turn machine on now')
-
+                    lcd.clear()
+                    
                     lcd.cursor_pos = (0, 0)
                     lcd.write_string('Starting Machine')
                     time.sleep(1)
