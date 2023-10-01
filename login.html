@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FabFive</title>
+
+    <style>
+      p {
+        font-family: Arial;
+        text-align: center;
+      }
+      .project-title {
+        color: rgb(0, 140, 255);
+        font-weight:bold;
+        font-size: 60px;
+
+        margin-top: 100px;
+        margin-bottom: 20px;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+      .project-team {
+        font-size: 30px;
+
+        margin-top: 0px;
+        margin-bottom: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+
+      .login-box {
+        margin: auto;
+        border-color: rgb(0, 140, 255);
+        border-width: 2px;
+        border-style: solid;
+        
+        width: 300px;
+        height: 200px;
+      }
+
+      .login-credentials {
+        display: block;
+
+        font-size: 20px;
+        text-align: left;
+
+        border-color: rgb(0, 140, 255);
+        border-style: solid;
+        border-radius: 5px;
+        
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 50px;
+
+        /*
+        margin-top: 10px;
+        
+        margin-left: 0px;
+        margin-right: 0px;
+        */
+        margin:auto;
+        margin-bottom: 10px;
+      }
+
+      .login-button {
+        display: block;
+        background-color: rgb(0, 140, 255);
+        
+        color: white;
+        font-size: 20px;
+        text-align: center;
+
+        border: none;
+        border-radius: 10px;
+
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 50px;
+        padding-right: 50px;
+
+        margin: auto;
+        transition: box-shadow 1.0s;
+      }
+
+      .login-button:hover {
+        box-shadow: 0px 1px 10px black;
+      }
+
+      .login-button:active {
+        transition: background-color 0.3s;
+        background-color: rgba(0, 140, 255, 0.5);
+      }
+    </style>
+
+  </head>
+  <body>
+    <p class="project-title">FabLab Tool Access</p>
+    <p class="project-team">By FabFive</p>
+
+    <!--<div class="login-box">-->
+      <input class="login-credentials" type="text" placeholder="Username">
+      <input class="login-credentials" type="text" placeholder="Password">
+      <button class="login-button">Login</button>
+    <!--</div>-->
+  </body>
+</html>
