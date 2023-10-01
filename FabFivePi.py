@@ -1,12 +1,12 @@
 # FabFive Software, Version: Development Code (DevC 0.5)
 """
-DevC 0.5 
+DevC 0.5
 Added:
 - Machine Activation
 - Variable timer: shorter or longer timer based on whether user is default or admin respectively
 Debug:
-- Fixed code in main loop where user index was falsely identified: 
-  user_index = card_number.index(current_user.number) when it should have been user_index = card_numbers.index(current_user.number) 
+- Fixed code in main loop where user index was falsely identified:
+  user_index = card_number.index(current_user.number) when it should have been user_index = card_numbers.index(current_user.number)
 - Readjusted admin identifier to be 0 and 1 instead of "True" and "False" to avoid 'Truthy' error. <- when reading from files and adding to list
 - Adjusted code so that 'button2' option in admin mode for set user to default in "add user" sub-menu does not take user to "remove user" sub-menu.
 - For developer mode, user can input 'y' and 'n' in place of 'button1' and 'button2' respectively.
@@ -48,12 +48,12 @@ class CardUser:
 
 # This function will display "start-up" screen for our device
 def boot_up():
-    lcd.cursor_pos = (0,0)
+    lcd.cursor_pos = (0, 0)
     lcd.write_string('MACHINE ONE')
     print('MACHINE ONE')  # Dev code
     time.sleep(1)
-    
-    lcd.cursor_pos = (1,0)
+
+    lcd.cursor_pos = (1, 0)
     lcd.write_string('Please scan card')
     print('Please scan card')  # Dev code
     time.sleep(1)
@@ -62,12 +62,12 @@ def boot_up():
 # Function displays a menu in which admins can either add or remove users
 def admin_menu():
     button_response = True
-    
-    lcd.cursor_pos = (0,0)
+
+    lcd.cursor_pos = (0, 0)
     lcd.write_string('1. Add user?')
-    lcd.cursor_pos = (1,0)
+    lcd.cursor_pos = (1, 0)
     lcd.write_string('2.Remove user?')
-    
+
     print('1. Add user?')
     print('2. Remove user?')
 
@@ -78,15 +78,15 @@ def admin_menu():
 
         # Add user sub-menu
         if GPIO.input(button1) == 0:
-        # if dev_input == "y":  # DEV CODE
+            # if dev_input == "y":  # DEV CODE
             button_response = False
             button_response1 = True
-            
+
             lcd.clear()
-            
-            lcd.cursor_pos = (0,0)
+
+            lcd.cursor_pos = (0, 0)
             lcd.write_string('ADD USER')
-            lcd.cursor_pos = (1,0)
+            lcd.cursor_pos = (1, 0)
             lcd.write_string('Scan card to add')
 
             print('ADD USER')
@@ -94,11 +94,11 @@ def admin_menu():
             user_add = input()
 
             lcd.clear()
-            lcd.cursor_pos = (0,0)
+            lcd.cursor_pos = (0, 0)
             lcd.write_string('Set user as')
-            lcd.cursor_pos = (1,0)
+            lcd.cursor_pos = (1, 0)
             lcd.write_string('admin?')
-            
+
             print('Set user as admin?')
             while button_response1:
                 time.sleep(1)
@@ -106,30 +106,30 @@ def admin_menu():
                 # dev_input = input()  # DEV CODE
 
                 if GPIO.input(button1) == 0:
-                # if dev_input == "y":  # DEV CODE
+                    # if dev_input == "y":  # DEV CODE
                     button_response1 = False
-                    
+
                     lcd.clear()
-                    lcd.cursor_pos = (0,0)
+                    lcd.cursor_pos = (0, 0)
                     lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1,0)
+                    lcd.cursor_pos = (1, 0)
                     lcd.write_string('as admin...')
                     time.sleep(1)
-                    
+
                     print('User set to admin')
                     add_user(user_add, 1)
 
                 elif GPIO.input(button2) == 0:
-                # elif dev_input == "n":  # DEV CODE
+                    # elif dev_input == "n":  # DEV CODE
                     button_response1 = False
-                    
+
                     lcd.clear()
-                    lcd.cursor_pos = (0,0)
+                    lcd.cursor_pos = (0, 0)
                     lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1,0)
+                    lcd.cursor_pos = (1, 0)
                     lcd.write_string('as default...')
                     time.sleep(1)
-                    
+
                     print('User set to default')
                     add_user(user_add, 0)
                     time.sleep(1)
@@ -137,7 +137,7 @@ def admin_menu():
 
         # Remove user sub-menu
         elif GPIO.input(button2) == 0:
-        # elif dev_input == "n":  # DEV CODE
+            # elif dev_input == "n":  # DEV CODE
             button_response = False
             print('REMOVE USER')
             print('Please scan card')
@@ -155,29 +155,29 @@ def add_user(user, is_admin):
             card_numbers.append(user)
             are_admins.append(is_admin)
         print('User added')
-        
+
         lcd.clear()
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('New user added')
         time.sleep(2)
         lcd.clear()
-        
+
     # if user already in user list
     else:
         lcd.clear()
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('User already in ')
-        lcd.cursor_pos = (1,0)
+        lcd.cursor_pos = (1, 0)
         lcd.write_string('system!!!')
         time.sleep(3)
-        
+
         lcd.clear()
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('Add user process')
-        lcd.cursor_pos = (1,0)
+        lcd.cursor_pos = (1, 0)
         lcd.write_string('cancelled!!!')
         time.sleep(3)
-        
+
         print('user already in system')
         print('add process cancelled')
 
@@ -210,9 +210,9 @@ def timer(time_duration):
     GPIO.output(machine_pin, True)  # turn on machine
     time.sleep(1)  # buffer button2 input
     while time_duration > 0:
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('Seconds: ' + str(time_duration))
-        
+
         print(time_duration)
         # Timer escape feature
         if GPIO.input(button2) == 0:
@@ -228,10 +228,13 @@ def timer(time_duration):
 def scroll_text(long_text, line_number):
     length_text = len(long_text)
     for i in range(length_text):
-        if (15-i) != -1:
-            lcd.cursor_pos = (line_number, (15-i))
-        lcd.write_string(long_text)
-        time.sleep(0.5)
+        if (15 - i) != -1:
+            lcd.cursor_pos = (line_number, (15 - i))
+            lcd.write_string(long_text)
+        else:
+            lcd.cursor_pos = (line_number, 0)
+            lcd.write_string(long_text[abs(15-i):length_text])
+        time.sleep(0.25)
     time.sleep(1)
     lcd.clear()
 
@@ -278,17 +281,17 @@ while loop:
     # See if user is already in list
     # If user is default, accept, turn on machine and timer
     if current_user.number in card_numbers:
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('User recognized')
         print('User recognized')
         time.sleep(1)
-        
-        lcd.cursor_pos = (1,0)
+
+        lcd.cursor_pos = (1, 0)
         lcd.write_string('Welcome back')
         print('Welcome back')
         time.sleep(2)
         lcd.clear()
-        
+
         user_index = card_numbers.index(current_user.number)
         current_user.is_admin = are_admins[user_index]
         print('See if user in list main(), index: ' + str(user_index))  # DEV CODE
@@ -297,12 +300,12 @@ while loop:
     # If user not recognized, deny access, just say "To get added call Admin"
     if user_index == -1:
         lcd.clear()
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('User not found')
         time.sleep(1)
-        
+
         scroll_text('To join the system, call admin for assistance', 1)
-        
+
         print('User not found')
         print('To join the system, call admin for assistance')
     # if user is found
@@ -323,22 +326,22 @@ while loop:
                 elif GPIO.input(button2) == 0:
                     button_response = False
                     print('should turn machine on now')
-                    
-                    lcd.cursor_pos = (0,0)
+
+                    lcd.cursor_pos = (0, 0)
                     lcd.write_string('Starting Machine')
                     time.sleep(1)
                     lcd.clear()
-                    
+
                     admin_timer = 60 * seconds_per_minute  # admin gets an hour of usage
                     timer(admin_timer)
-                    
+
         # else turn on machine and start timer
         else:
-            lcd.cursor_pos = (0,0)
+            lcd.cursor_pos = (0, 0)
             lcd.write_string('Starting Machine')
             time.sleep(1)
             lcd.clear()
-            
+
             default_timer = minutes * seconds_per_minute  # default user gets 5 minutes of usage
             timer(default_timer)
 print('Cleaning GPIO pins')
