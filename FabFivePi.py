@@ -156,7 +156,7 @@ def add_user(user, is_admin):
             csv_writer.writerow([user] + [is_admin])
             card_numbers.append(user)
             are_admins.append(is_admin)
-        print('User added')
+        print('User added to file')
 
         lcd.clear()
         lcd.cursor_pos = (0, 0)
@@ -166,22 +166,21 @@ def add_user(user, is_admin):
 
     # if user already in user list
     else:
+        print('User already in system')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('User already in ')
         lcd.cursor_pos = (1, 0)
         lcd.write_string('system!!!')
         time.sleep(3)
-
+        
+        print('Add process cancelled')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('Add user process')
         lcd.cursor_pos = (1, 0)
         lcd.write_string('cancelled!!!')
         time.sleep(3)
-
-        print('user already in system')
-        print('add process cancelled')
 
 
 # Function removes selected user from the user list
@@ -192,18 +191,18 @@ def remove_user(user):
         card_numbers.remove(user)
         are_admins.pop(temp_index)
         
+        print('User removed')
         lcd.clear()
         lcd.cursor_pos = (0,0)
         lcd.write_string('User now removed')
         time.sleep(1)
         
-        print('User removed')
         with open("fablist.csv", "w") as user_file:
             csv_writer = csv.writer(user_file, delimiter=',')
             counter = 0
             while counter < len(card_numbers):
-                print('Inside remove(), number: ' + str(card_numbers[counter]))  # DEV CODE
-                print('Inside remove(): are_admins: ' + str(are_admins[counter]))  # DEV CODE
+                # print('Inside remove(), number: ' + str(card_numbers[counter]))  # DEV CODE
+                # print('Inside remove(): are_admins: ' + str(are_admins[counter]))  # DEV CODE
                 csv_writer.writerow([card_numbers[counter]] + [str(are_admins[counter])])
                 counter += 1
             print('File updated')
@@ -211,11 +210,10 @@ def remove_user(user):
     else:
         lcd.clear()
         lcd.cursor_pos = (0,0)
-        lcd.write_string('User not in list!')
-        scroll_text('removal process cancelled', 1)
-        
         print('user not found in list')
         print('removal process cancelled')
+        lcd.write_string('User not in list!')
+        scroll_text('removal process cancelled', 1)
 
 
 # Function turns activates machine while displaying the amount of time left before machine deactivates
@@ -242,13 +240,12 @@ def timer(time_duration):
         lcd.clear()
     GPIO.output(machine_pin, False)  # turn off machine
     
+    print('Finished timer')
     lcd.clear()
     lcd.cursor_pos = (0,0)
     lcd.write_string('Timer finished!')
     time.sleep(1)
     lcd.clear()
-    
-    print('Finished timer')
 
 
 def scroll_text(long_text, line_number):
@@ -282,8 +279,8 @@ while loop:
         break
     current_user = CardUser(card_number)
 
-    print('In main loop, number: ' + current_user.number)  # DEV CODE
-    print('In main loop, is_admin: ' + str(current_user.is_admin))  # DEV CODE
+    # print('In main loop, number: ' + current_user.number)  # DEV CODE
+    # print('In main loop, is_admin: ' + str(current_user.is_admin))  # DEV CODE
 
     # Read list from file
     try:
@@ -322,8 +319,8 @@ while loop:
 
         user_index = card_numbers.index(current_user.number)
         current_user.is_admin = are_admins[user_index]
-        print('See if user in list main(), index: ' + str(user_index))  # DEV CODE
-        print('See user is admin: ' + str(current_user.is_admin))  # DEV CODE
+        # print('See if user in list main(), index: ' + str(user_index))  # DEV CODE
+        # print('See user is admin: ' + str(current_user.is_admin))  # DEV CODE
 
     # If user not recognized, deny access, just say "To get added call Admin"
     if user_index == -1:
@@ -360,7 +357,7 @@ while loop:
                 # elif dev_input == "n":  # DEV CODE
                 elif GPIO.input(button2) == 0:
                     button_response = False
-                    print('should turn machine on now')
+                    print('Starting machine')
                     lcd.clear()
                     
                     lcd.cursor_pos = (0, 0)
@@ -373,6 +370,7 @@ while loop:
 
         # else turn on machine and start timer
         else:
+            print('Starting Machine')
             lcd.cursor_pos = (0, 0)
             lcd.write_string('Starting Machine')
             time.sleep(1)
