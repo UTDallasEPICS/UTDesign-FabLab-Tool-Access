@@ -98,9 +98,49 @@
     <p class="project-team">By FabFive</p>
 
     <!--<div class="login-box">-->
-      <input class="login-credentials" type="text" placeholder="Username">
-      <input class="login-credentials" type="text" placeholder="Password">
-      <button class="login-button">Login</button>
+      <input class="js-username login-credentials" type="text" placeholder="Username">
+      <input class="js-password login-credentials" type="password" placeholder="Password">
+      <button class="login-button" onclick="validateLogin();">Login</button>
     <!--</div>-->
   </body>
+
+  <script>
+    let loginSuccess = false;
+    const userList = []; //import userlist from a file
+    let currentUser = {
+      name: '',
+      pw: ''
+    };
+
+    function validateLogin() {
+      const usernameElement = document.querySelector('.js-username');
+      const passwordElement = document.querySelector('.js-password');
+
+      const username = usernameElement.value;
+      const password = passwordElement.value;
+
+      console.log('Username: ' + username);
+      console.log('Password: ' + password);
+
+      currentUser.name = username; //get username from web user list
+      currentUser.pw = password; //get password from web user list
+
+      let usernameIndex = findUsername(username);
+      if(userList[usernameIndex].pw === password) {
+        loginSuccess = true;
+      }
+    }
+
+    function findUsername(username) {
+      let usernamePos = -1;
+      for(let i = 0; i < userList.length; i++) {
+        if(userList[i].name === username) {
+          usernamePos = i;
+          break;
+        }
+      }
+      return usernamePos;
+    }
+
+  </script>
 </html>
