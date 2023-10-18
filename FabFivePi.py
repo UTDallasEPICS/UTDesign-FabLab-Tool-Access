@@ -1,10 +1,11 @@
-# FabFive Software, Version: Development Code (DevC 0.6)
+# FabFive Software, Version: Development Code (DevC 0.7)
 """
-DevC 0.6
+DevC 0.7
 Added:
--Completed code for scrolling text
--Added more LCD code (user now able to use system with LCD prompts):
-  -LCD code added in places like admin menus and timer
+- Placed console print commands before lcd print commands
+- Updated timer code: default users have timer, admin users have unlimited time
+- Added time_spent variable (for admin and defaults) to keep track of user session
+- Added Session Usage variable to store card number, time spent, start and stop time
 """
 # Author: Ammar Mohammed
 import time
@@ -43,14 +44,14 @@ class CardUser:
 
 # This function will display "start-up" screen for our device
 def boot_up():
+    print('MACHINE ONE')  # Dev code
     lcd.cursor_pos = (0, 0)
     lcd.write_string('MACHINE ONE')
-    print('MACHINE ONE')  # Dev code
     time.sleep(1)
 
+    print('Please scan card')  # Dev code
     lcd.cursor_pos = (1, 0)
     lcd.write_string('Please scan card')
-    print('Please scan card')  # Dev code
     time.sleep(1)
 
 
@@ -58,13 +59,12 @@ def boot_up():
 def admin_menu():
     button_response = True
 
+    print('1. Add user?')
+    print('2. Remove user?')
     lcd.cursor_pos = (0, 0)
     lcd.write_string('1. Add user?')
     lcd.cursor_pos = (1, 0)
     lcd.write_string('2. Remove user?')
-
-    print('1. Add user?')
-    print('2. Remove user?')
 
     while button_response:
         time.sleep(1)
@@ -79,22 +79,22 @@ def admin_menu():
 
             lcd.clear()
 
+            print('ADD USER')
+            print('Please scan card')
             lcd.cursor_pos = (0, 0)
             lcd.write_string('ADD USER')
             lcd.cursor_pos = (1, 0)
             lcd.write_string('Scan card to add')
 
-            print('ADD USER')
-            print('Please scan card')
             user_add = input()
 
+            print('Set user as admin?')
             lcd.clear()
             lcd.cursor_pos = (0, 0)
             lcd.write_string('Set user as')
             lcd.cursor_pos = (1, 0)
             lcd.write_string('admin?')
 
-            print('Set user as admin?')
             while button_response1:
                 time.sleep(1)
 
@@ -104,6 +104,7 @@ def admin_menu():
                     # if dev_input == "y":  # DEV CODE
                     button_response1 = False
 
+                    print('Setting new user as admin...')
                     lcd.clear()
                     lcd.cursor_pos = (0, 0)
                     lcd.write_string('Setting new user')
@@ -118,6 +119,7 @@ def admin_menu():
                     # elif dev_input == "n":  # DEV CODE
                     button_response1 = False
 
+                    print('Setting new user as default...')
                     lcd.clear()
                     lcd.cursor_pos = (0, 0)
                     lcd.write_string('Setting new user')
@@ -134,15 +136,15 @@ def admin_menu():
         elif GPIO.input(button2) == 0:
             # elif dev_input == "n":  # DEV CODE
             button_response = False
-            
-            lcd.clear()
-            lcd.cursor_pos = (0,0)
-            lcd.write_string('REMOVE USER')
-            lcd.cursor_pos = (1,0)
-            lcd.write_string('Please scan card')
-            
+
             print('REMOVE USER')
             print('Please scan card')
+            lcd.clear()
+            lcd.cursor_pos = (0, 0)
+            lcd.write_string('REMOVE USER')
+            lcd.cursor_pos = (1, 0)
+            lcd.write_string('Please scan card')
+
             user_remove = input()
             remove_user(user_remove)
 
@@ -156,8 +158,8 @@ def add_user(user, is_admin):
             csv_writer.writerow([user] + [is_admin])
             card_numbers.append(user)
             are_admins.append(is_admin)
-        print('User added')
 
+        print('User added')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('New user added')
@@ -173,15 +175,14 @@ def add_user(user, is_admin):
         lcd.write_string('system!!!')
         time.sleep(3)
 
+        print('user already in system')
+        print('add process cancelled')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('Add user process')
         lcd.cursor_pos = (1, 0)
         lcd.write_string('cancelled!!!')
         time.sleep(3)
-
-        print('user already in system')
-        print('add process cancelled')
 
 
 # Function removes selected user from the user list
@@ -191,13 +192,13 @@ def remove_user(user):
         temp_index = card_numbers.index(user)
         card_numbers.remove(user)
         are_admins.pop(temp_index)
-        
+
+        print('User removed')
         lcd.clear()
-        lcd.cursor_pos = (0,0)
+        lcd.cursor_pos = (0, 0)
         lcd.write_string('User now removed')
         time.sleep(1)
-        
-        print('User removed')
+
         with open("fablist.csv", "w") as user_file:
             csv_writer = csv.writer(user_file, delimiter=',')
             counter = 0
@@ -209,46 +210,92 @@ def remove_user(user):
             print('File updated')
     # if user was not in the user list
     else:
-        lcd.clear()
-        lcd.cursor_pos = (0,0)
-        lcd.write_string('User not in list!')
-        scroll_text('removal process cancelled', 1)
-        
         print('user not found in list')
         print('removal process cancelled')
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('User not in list!')
+        scroll_text('removal process cancelled', 1)
 
 
 # Function turns activates machine while displaying the amount of time left before machine deactivates
-def timer(time_duration):
+def timer(user_type):
     GPIO.output(machine_pin, True)  # turn on machine
     time.sleep(1)  # buffer button2 input
-    
-    while time_duration > 0:
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('Seconds: ' + str(time_duration))
-        lcd.cursor_pos = (1,0)
-        lcd.write_string('Exit: Button 2')
 
-        print(time_duration)
-        # Timer escape feature
-        if GPIO.input(button2) == 0:
-            print('Exited timer')
-            lcd.cursor_pos = (0,0)
-            lcd.write_string('EXIT TIMER...')
+    get_time = time.localtime()
+    start_time = time.strftime("%H:%M:%S", get_time)
+    print(start_time)
+
+    if user_type == 'default':
+        default_timer = minutes * seconds_per_minute
+        default_time_spent = 0
+        while default_timer > 0:
+            print(default_timer)
+            lcd.cursor_pos = (0, 0)
+            lcd.write_string('Seconds: ' + str(default_timer))
+            lcd.cursor_pos = (1, 0)
+            lcd.write_string('Exit: Button 2')
+
+            # Timer escape feature
+            if GPIO.input(button2) == 0:
+                print('Exited timer')
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string('EXIT TIMER...')
+                time.sleep(1)
+                break
             time.sleep(1)
-            break
-        time.sleep(1)
-        time_duration -= 1
-        lcd.clear()
+            default_timer -= 1
+            default_time_spent += 1
+            lcd.clear()
+        print('Total time spent: ' + str(default_time_spent))
+
+        get_time = time.localtime()
+        stop_time = time.strftime("%H:%M:%S", get_time)
+        print(stop_time)
+
+        session_usage = f'{current_user.number}, {default_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
+        print(session_usage)
+
+    elif user_type == 'admin':
+        admin_time_spent = 0
+        admin_use_machine = True
+
+        while admin_use_machine:
+            print(admin_time_spent)
+            lcd.cursor_pos = (0, 0)
+            lcd.write_string('Time (s): ' + str(admin_time_spent))
+            lcd.cursor_pos = (1, 0)
+            lcd.write_string('Exit: Button 2')
+
+            # Timer escape feature
+            if GPIO.input(button2) == 0:
+                admin_use_machine = False
+                print('Exited timer')
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string('EXIT TIMER...')
+                time.sleep(1)
+                break
+            time.sleep(1)
+            admin_time_spent += 1
+            lcd.clear()
+        print('Total time spent: ' + str(admin_time_spent))
+
+        get_time = time.localtime()
+        stop_time = time.strftime("%H:%M:%S", get_time)
+        print(stop_time)
+
+        session_usage = f'{current_user.number}, {admin_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
+        print(session_usage)
+
     GPIO.output(machine_pin, False)  # turn off machine
-    
+
+    print('Finished timer')
     lcd.clear()
-    lcd.cursor_pos = (0,0)
+    lcd.cursor_pos = (0, 0)
     lcd.write_string('Timer finished!')
     time.sleep(1)
     lcd.clear()
-    
-    print('Finished timer')
 
 
 def scroll_text(long_text, line_number):
@@ -259,7 +306,7 @@ def scroll_text(long_text, line_number):
             lcd.write_string(long_text)
         else:
             lcd.cursor_pos = (line_number, 0)
-            lcd.write_string(long_text[abs(15-i):length_text])
+            lcd.write_string(long_text[abs(15 - i):length_text])
         time.sleep(0.25)
     time.sleep(1)
     lcd.clear()
@@ -282,9 +329,6 @@ while loop:
         break
     current_user = CardUser(card_number)
 
-    print('In main loop, number: ' + current_user.number)  # DEV CODE
-    print('In main loop, is_admin: ' + str(current_user.is_admin))  # DEV CODE
-
     # Read list from file
     try:
         user_file = open("fablist.csv", "r")
@@ -295,8 +339,8 @@ while loop:
             are_admins.append(int(line[1]))  # must cast to int first, because it's str, which would cause truthy
             # for '0' instead of falsy for 0
         user_file.close()
-        print(card_numbers)  # DEV CODE
-        print(are_admins)  # DEV CODE
+        print(card_numbers)  # Read out the card numbers in the file
+        print(are_admins)  # Read out the admin status in the file
 
     except FileNotFoundError:
         print('FILE NOT FOUND')
@@ -310,20 +354,18 @@ while loop:
     # If user is default, accept, turn on machine and timer
     if current_user.number in card_numbers:
         lcd.cursor_pos = (0, 0)
-        lcd.write_string('User recognized')
         print('User recognized')
+        lcd.write_string('User recognized')
         time.sleep(1)
 
         lcd.cursor_pos = (1, 0)
-        lcd.write_string('Welcome back')
         print('Welcome back')
+        lcd.write_string('Welcome back')
         time.sleep(2)
         lcd.clear()
 
         user_index = card_numbers.index(current_user.number)
         current_user.is_admin = are_admins[user_index]
-        print('See if user in list main(), index: ' + str(user_index))  # DEV CODE
-        print('See user is admin: ' + str(current_user.is_admin))  # DEV CODE
 
     # If user not recognized, deny access, just say "To get added call Admin"
     if user_index == -1:
@@ -332,10 +374,9 @@ while loop:
         lcd.write_string('User not found')
         time.sleep(1)
 
-        scroll_text('To join the system, call admin for assistance', 1)
-
         print('User not found')
         print('To join the system, call admin for assistance')
+        scroll_text('To join the system, call admin for assistance', 1)
     # if user is found
     else:
         # If admin scans launch admin menu (function)
@@ -344,9 +385,9 @@ while loop:
             button_response = True
 
             lcd.clear()
-            lcd.cursor_pos = (0,0)
+            lcd.cursor_pos = (0, 0)
             lcd.write_string('1. Admin Menu')
-            lcd.cursor_pos = (1,0)
+            lcd.cursor_pos = (1, 0)
             lcd.write_string('2. Use Machine')
 
             while button_response:
@@ -360,26 +401,25 @@ while loop:
                 # elif dev_input == "n":  # DEV CODE
                 elif GPIO.input(button2) == 0:
                     button_response = False
-                    print('should turn machine on now')
+                    print('Starting Machine...')
                     lcd.clear()
-                    
+
                     lcd.cursor_pos = (0, 0)
                     lcd.write_string('Starting Machine')
                     time.sleep(1)
                     lcd.clear()
 
-                    admin_timer = 60 * seconds_per_minute  # admin gets an hour of usage
-                    timer(admin_timer)
+                    timer('admin')
 
         # else turn on machine and start timer
         else:
+            print('Starting machine')
             lcd.cursor_pos = (0, 0)
             lcd.write_string('Starting Machine')
             time.sleep(1)
             lcd.clear()
 
-            default_timer = minutes * seconds_per_minute  # default user gets 5 minutes of usage
-            timer(default_timer)
+            timer('default')
 print('Cleaning GPIO pins')
 lcd.clear()
 GPIO.cleanup()
