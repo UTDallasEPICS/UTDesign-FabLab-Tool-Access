@@ -1,0 +1,20 @@
+
+CREATE DATABASE Fablab;
+USE Fablab;
+
+CREATE TABLE USERS (
+    User_Id INT PRIMARY KEY,
+    Admin BOOLEAN
+);
+
+INSERT INTO USERS (User_Id, Admin) VALUES
+    (1, 1),
+    (2, 0),
+    (3, 0),
+    (4, 1),
+    (5, 0),
+    (6, 0),
+    (7, 1),
+    (8, 0),
+    (9, 1),
+    (10, 0);
