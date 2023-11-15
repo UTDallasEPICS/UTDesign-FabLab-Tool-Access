@@ -1,0 +1,14 @@
+[
+  {
+    "userID": "2020123654",
+    "IsAdmin": 1,
+    "machineID": "Test Bench",
+    "TimeUsedSeconds": 120
+  },
+  {
+    "userID": "202",
+    "IsAdmin": 0,
+    "machineID": "Test Bench",
+    "TimeUsedSeconds": 0
+  }
+]

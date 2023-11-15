@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+	<title>UTDesign Fab Shop</title>
+	</head>
+	
+	<body>
+		<h1>Admin Portal</h1>
+		<p>Username:<p>
+		<p><strong>Password:</strong><p>
+		<img src="./FabLabs.png" alt="The FabLab Logo"height="310" width="310">
+	</body>
+</html>
