@@ -1,14 +1,19 @@
 [
-  {
-    "userID": "2020123654",
-    "IsAdmin": 1,
-    "machineID": "Test Bench",
-    "TimeUsedSeconds": 120
-  },
-  {
-    "userID": "202",
-    "IsAdmin": 0,
-    "machineID": "Test Bench",
-    "TimeUsedSeconds": 0
-  }
-]
+    {
+      "userID": "2020123653",
+      "adminStatus": 1
+    },
+    {
+      "userID": "201",
+      "adminStatus": 0
+    },
+    {
+      "userID": "20201236541",
+      "adminStatus": 1
+    },
+    {
+      "userID": "2021",
+      "adminStatus": 0
+    }
+
+  ]

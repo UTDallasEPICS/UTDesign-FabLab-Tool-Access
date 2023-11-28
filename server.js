@@ -1,48 +1,62 @@
-const userData1 = {
-    userID: "2020123654",
-    IsAdmin: 1,
-    machineID: "Test Bench",
-    TimeUsedSeconds: 120
-};
-const userData2 = {
-    userID: "202",
-    IsAdmin: 0,
-    machineID: "Test Bench",
-    TimeUsedSeconds: 0
-};
-
-let array = [];
 const fs = require('fs');
+const db = require('./Database/db'); // Import the SQLite database module
+const express = require('express'); // Import the ExpressJS framework
+let sql;
 
-//const jsonUserData = JSON.stringify(userData1);
-//const jsonUserData2 = JSON.stringify(userData2);
+const app = express();
+const port = 3000;
 
-array.push(userData1);
-array.push(userData2);
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
-//fs.writeFileSync('userdata.json', JSON.stringify(array));
-//fs.writeFileSync('userdata.json', JSON.stringify(array, null, 2));
+// Read from file
+const jsonUserData = fs.readFileSync('userdata.json', 'utf8');
+const userData = JSON.parse(jsonUserData);
 
-//fs.writeFileSync('userdata.json', jsonUserData2);
+// Insert data into the database
+const insertData = () => {
+    // Begin a transaction
+    //db.run('BEGIN TRANSACTION');
 
-//Read from file
-jsonUserData = fs.readFileSync('userdata.json', 'utf8');
-userData = JSON.parse(jsonUserData);
-//console.log(userData);
-//For loop to print out the userdata to console
-for (let i = 0; i < userData.length; i++) {
-    console.log(userData);
-}
+    for (const { userID, adminStatus } of userData) {
+        sql = 'INSERT INTO USERS (userID, AdminStatus, MachineType, Date, StartTime) VALUES (?, ?, ?, ?, ?)';
+        db.run(
+        sql, 
+        [userID, adminStatus, 'SampleMachine', '2023-01-01', '12:00:00'],
+        (err) => {
+          if (err) {
+            console.error(err.message);
+          } else {
+            console.log(`Data inserted for userID: ${userID}`);
+          }
+        }
+        );
+    }
+    // Commit the transaction
+    //db.run('COMMIT');
+};
 
-//Only write userID and Admin status from objects to new json file
-let newUserData = [];
-for (let i = 0; i < userData.length; i++) {
-    newUserData.push({
-        userID: userData[i].userID,
-        IsAdmin: userData[i].IsAdmin
+const readData = () => {
+// Read the data from the database
+app.get('/', (req, res) => {
+    sql = 'SELECT * FROM USERS';
+    db.all(sql, [], (err, users) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        }
+        // rows.forEach((row) => {
+        //     console.log(row);
+        else {
+            res.render('index', { users });
+        }
     });
-}
-//console.log(newUserData);
-fs.writeFileSync('newuserdata.json', JSON.stringify(newUserData, null, 2));
+});
+};
 
+//insertData();
+readData();
 
+app.listen(port, () => {
+    console.log(`Server is listening at http://localhost:${port}`);
+  });
