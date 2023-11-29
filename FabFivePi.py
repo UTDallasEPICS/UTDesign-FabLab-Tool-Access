@@ -6,14 +6,17 @@ Features:
 - Developing process to send data to server as JSON string
     - See send_data() at line 312
 - Added some server/client socket code
+- Now supports i2c 20x4 LCD screen.
+- pip install mysql-connector
 """
 # Author: Ammar Mohammed
 import time
 import csv
 import RPi.GPIO as GPIO
-from RPLCD.gpio import CharLCD
+from RPLCD.i2c import CharLCD
 import json
 import socket
+import mysql.connector
 
 loop = True
 
@@ -27,8 +30,7 @@ GPIO.setup(button1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(machine_pin, GPIO.OUT)
 
-lcd = CharLCD(pin_rs=15, pin_rw=18, pin_e=16, pins_data=[21, 22, 23, 24],
-              numbering_mode=GPIO.BOARD)
+lcd = CharLCD('PCF8574', 0x27)
 
 card_numbers = {}
 
@@ -92,10 +94,16 @@ def admin_menu():
 
             print('Set user as admin?')
             lcd.clear()
+            # lcd.cursor_pos = (0, 0)
+            # lcd.write_string('Set user as')
+            # lcd.cursor_pos = (1, 0)
+            # lcd.write_string('admin?')
             lcd.cursor_pos = (0, 0)
-            lcd.write_string('Set user as')
-            lcd.cursor_pos = (1, 0)
-            lcd.write_string('admin?')
+            lcd.write_string('Set user as admin?')
+            lcd.cursor_pos = (0, 2)
+            lcd.write_string('Button 1: YES')
+            lcd.cursor_pos = (0, 3)
+            lcd.write_string('Button 2: NO')
 
             while button_response1:
                 time.sleep(1)
@@ -209,7 +217,12 @@ def remove_user(user):
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('User not in list!')
-        scroll_text('removal process cancelled', 1)
+        # scroll_text('removal process cancelled', 1)
+        # 20x4 LCD
+        lcd.cursor_pos = (0, 1)
+        lcd.write_string('removal process')
+        lcd.cursor_pos = (0, 2)
+        lcd.write_string('cancelled')
 
 
 # Function turns activates machine while displaying the amount of time left before machine deactivates
@@ -250,6 +263,8 @@ def timer(user_type):
 
         session_usage = f'{current_user.number}, {default_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
         print(session_usage)
+        session_data = json.dumps(session_usage)
+        send_data(session_data)
 
     elif user_type == 'admin':
         admin_time_spent = 0
@@ -281,6 +296,8 @@ def timer(user_type):
 
         session_usage = f'{current_user.number}, {admin_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
         print(session_usage)
+        session_data = json.dumps(session_usage)
+        send_data(session_data)
 
     GPIO.output(machine_pin, False)  # turn off machine
 
@@ -292,6 +309,10 @@ def timer(user_type):
     lcd.clear()
 
 
+'''Developed for 16x2 LCD
+Starts printing string at last digit panel on screen,
+then carries the text forward
+'''
 def scroll_text(long_text, line_number):
     length_text = len(long_text)
     for i in range(length_text):
@@ -306,10 +327,10 @@ def scroll_text(long_text, line_number):
     lcd.clear()
 
 
-def send_data():
-    card_data = json.dumps(card_numbers)
-    print(card_data)
+def send_data(data):
+    print(data)
 
+    print('Connecting to server...')
     lcd.clear()
     lcd.cursor_pos = (0, 0)
     lcd.write_string('Connecting to')
@@ -317,7 +338,7 @@ def send_data():
     lcd.write_string('server...')
     time.sleep(1)
 
-    bytes_to_send = card_data.encode('utf-8')
+    bytes_to_send = data.encode('utf-8')
     server_address = ('192.168.254.209', 2222)
     buffer_size = 1024
     udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -368,7 +389,8 @@ while loop:
 
         print('Created file')
 
-    send_data()
+    card_data = json.dumps(card_numbers)  # converts list of card numbers to JSON
+    send_data(card_data)
     lcd.clear()
 
     boot_up()  # just prints text on screens
@@ -405,7 +427,14 @@ while loop:
         time.sleep(1)
 
         print('To join the system, call admin for assistance')
-        scroll_text('To join the system, call admin for assistance', 1)
+        # scroll_text('To join the system, call admin for assistance', 1)
+        # 20x4 LCD
+        lcd.cursor_pos = (0, 1)
+        lcd.write_string('To join the system,')
+        lcd.cursor_pos = (0, 2)
+        lcd.write_string('call admin for')
+        lcd.cursor_pos = (0, 3)
+        lcd.write_string('assistance')
     # if user is found
     else:
         # If admin scans launch admin menu (function)
