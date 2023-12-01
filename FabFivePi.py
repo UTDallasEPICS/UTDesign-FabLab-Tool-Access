@@ -229,7 +229,7 @@ def timer(user_type):
 
             # Timer escape feature
             if GPIO.input(button2) == 0:
-                print('Exited timer')
+                # print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
