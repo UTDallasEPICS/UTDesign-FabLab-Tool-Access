@@ -10,7 +10,7 @@ import csv
 import RPi.GPIO as GPIO
 from RPLCD.i2c import CharLCD
 import json
-import mysql.connector
+# import mysql.connector
 
 loop = True
 
@@ -82,44 +82,44 @@ def admin_menu():
             lcd.write_string('Scan card to add')
 
             user_add = input()
+            if not check_user_in_list(user_add):
+                print('Set user as admin?')
+                lcd.clear()
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string('Set user as admin?')
+                lcd.cursor_pos = (2, 0)
+                lcd.write_string('Button 1: YES')
+                lcd.cursor_pos = (3, 0)
+                lcd.write_string('Button 2: NO')
 
-            print('Set user as admin?')
-            lcd.clear()
-            lcd.cursor_pos = (0, 0)
-            lcd.write_string('Set user as admin?')
-            lcd.cursor_pos = (2, 0)
-            lcd.write_string('Button 1: YES')
-            lcd.cursor_pos = (3, 0)
-            lcd.write_string('Button 2: NO')
-
-            while button_response1:
-                time.sleep(1)
-                if GPIO.input(button1) == 0:
-                    button_response1 = False
-
-                    print('Setting new user as admin...')
-                    lcd.clear()
-                    lcd.cursor_pos = (0, 0)
-                    lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1, 0)
-                    lcd.write_string('as admin...')
+                while button_response1:
                     time.sleep(1)
+                    if GPIO.input(button1) == 0:
+                        button_response1 = False
 
-                    add_user(user_add, 1)
+                        print('Setting new user as admin...')
+                        lcd.clear()
+                        lcd.cursor_pos = (0, 0)
+                        lcd.write_string('Setting new user')
+                        lcd.cursor_pos = (1, 0)
+                        lcd.write_string('as admin...')
+                        time.sleep(1)
 
-                elif GPIO.input(button2) == 0:
-                    button_response1 = False
+                        add_user(user_add, 1)
 
-                    print('Setting new user as default...')
-                    lcd.clear()
-                    lcd.cursor_pos = (0, 0)
-                    lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1, 0)
-                    lcd.write_string('as default...')
-                    time.sleep(1)
+                    elif GPIO.input(button2) == 0:
+                        button_response1 = False
 
-                    add_user(user_add, 0)
-                    time.sleep(1)
+                        print('Setting new user as default...')
+                        lcd.clear()
+                        lcd.cursor_pos = (0, 0)
+                        lcd.write_string('Setting new user')
+                        lcd.cursor_pos = (1, 0)
+                        lcd.write_string('as default...')
+                        time.sleep(1)
+
+                        add_user(user_add, 0)
+                        time.sleep(1)
 
         # Remove user sub-menu
         elif GPIO.input(button2) == 0:
@@ -137,24 +137,9 @@ def admin_menu():
             remove_user(user_remove)
 
 
-# Function adds users if they are not found in user list and sets new user to either admin or default
-def add_user(user, is_admin):
-    # if user not found in user list
-    if user not in card_numbers:
-        with open("fablist.csv", "a") as user_file:
-            csv_writer = csv.writer(user_file)
-            csv_writer.writerow([user] + [is_admin])
-            card_numbers.update({user: is_admin})
-
-        print({True: 'User set to admin!', False: 'User set to default!'}[is_admin])
-        lcd.clear()
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('New user added')
-        time.sleep(2)
-        lcd.clear()
-
+def check_user_in_list(user):
     # if user already in user list
-    else:
+    if user in card_numbers:
         print('User already in system')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
@@ -170,6 +155,26 @@ def add_user(user, is_admin):
         lcd.cursor_pos = (1, 0)
         lcd.write_string('cancelled!!!')
         time.sleep(3)
+        return True
+    else:
+        return False
+
+
+# Function adds users if they are not found in user list and sets new user to either admin or default
+def add_user(user, is_admin):
+    # if user not found in user list
+    if user not in card_numbers:
+        with open("fablist.csv", "a") as user_file:
+            csv_writer = csv.writer(user_file)
+            csv_writer.writerow([user] + [is_admin])
+            card_numbers.update({user: is_admin})
+
+        print({True: 'User set to admin!', False: 'User set to default!'}[is_admin])
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('New user added')
+        time.sleep(2)
+        lcd.clear()
 
 
 # Function removes selected user from the user list
@@ -347,12 +352,12 @@ def scroll_text(long_text, line_number):
 
 
 # mysql code
-db = mysql.connector.connect(
-    host="",
-    user="FabFive",
-    passwd="FabFive",
-    database="Fablab"
-)
+# db = mysql.connector.connect(
+#     host="",
+#     user="FabFive",
+#     passwd="FabFive",
+#     database="Fablab"
+# )
 
 # This while loop is the main loop
 while loop:
