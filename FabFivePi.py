@@ -248,6 +248,9 @@ def timer(user_type):
         print(session_usage)
         session_data = json.dumps(session_usage)
         # send_data(session_data)
+        '''
+        
+        '''
 
     elif user_type == 'admin':
         admin_time_spent = 0
@@ -312,52 +315,18 @@ def scroll_text(long_text, line_number):
     lcd.clear()
 
 
-# def send_data(data):
-#     print(data)
-#
-#     print('Connecting to server...')
-#     lcd.clear()
-#     lcd.cursor_pos = (0, 0)
-#     lcd.write_string('Connecting to')
-#     lcd.cursor_pos = (1, 0)
-#     lcd.write_string('server...')
-#     time.sleep(1)
-#
-#     bytes_to_send = data.encode('utf-8')
-#     server_address = ('192.168.254.209', 2222)
-#     buffer_size = 1024
-#     udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     udp_client.settimeout(20)  # testing 20 second unresponsive
-#     try:
-#         udp_client.sendto(bytes_to_send, server_address)
-#
-#         response, address = udp_client.recvfrom(buffer_size)
-#         response = response.decode('utf-8')
-#         print('Response from Server', response)
-#         print('Server IP Address: ', address[0])
-#         print('Server Port: ', address[1])
-#
-#         lcd.clear()
-#         lcd.cursor_pos = (0, 0)
-#         lcd.write_string('Reached server!')
-#         time.sleep(1)
-#     except socket.timeout:
-#         print('ERROR: Cannot reach server')
-#         lcd.clear()
-#         lcd.cursor_pos = (0, 0)
-#         lcd.write_string('ERROR: Server')
-#         lcd.cursor_pos = (1, 0)
-#         lcd.write_string('unavailable')
-#         time.sleep(5)
-
-
 # mysql code
-# db = mysql.connector.connect(
-#     host="",
-#     user="FabFive",
-#     passwd="FabFive",
-#     database="Fablab"
-# )
+'''
+db = mysql.connector.connect(
+    host="",
+    user="FabFive",
+    passwd="FabFive",
+    database="Fablab"
+)
+
+my_cursor = db.cursor()
+my_cursor.execute("INSERT INTO Fablab (userID, time_spent, start, stop) VALUES()")
+'''
 
 # This while loop is the main loop
 while loop:
@@ -382,7 +351,6 @@ while loop:
         print('Created file')
 
     card_data = json.dumps(card_numbers)  # converts list of card numbers to JSON
-    # send_data(card_data)
     lcd.clear()
 
     boot_up()  # just prints text on screens
