@@ -1,19 +1,16 @@
-# FabFive Software, Version: FabFivePi V8
+# FabFive Software, Version: FabFivePi V9
 """
-FabFivePi V8.0
-Features:
-- Changed runtime storage of card list data from lists to dictionary
-- Developing process to send data to server as JSON string
-    - See send_data() at line 312
-- Added some server/client socket code
+FabFivePi V9.0
+- Removed socket server connection
+- Fixed lcd.cursor_pos to follow row, column format: made mistake of col, row
 """
 # Author: Ammar Mohammed
 import time
 import csv
 import RPi.GPIO as GPIO
-from RPLCD.gpio import CharLCD
+from RPLCD.i2c import CharLCD
 import json
-import socket
+# import mysql.connector
 
 loop = True
 
@@ -27,8 +24,7 @@ GPIO.setup(button1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(machine_pin, GPIO.OUT)
 
-lcd = CharLCD(pin_rs=15, pin_rw=18, pin_e=16, pins_data=[21, 22, 23, 24],
-              numbering_mode=GPIO.BOARD)
+lcd = CharLCD('PCF8574', 0x27)
 
 card_numbers = {}
 
@@ -71,11 +67,8 @@ def admin_menu():
     while button_response:
         time.sleep(1)
 
-        # dev_input = input()  # DEV CODE
-
         # Add user sub-menu
         if GPIO.input(button1) == 0:
-            # if dev_input == "y":  # DEV CODE
             button_response = False
             button_response1 = True
 
@@ -89,52 +82,47 @@ def admin_menu():
             lcd.write_string('Scan card to add')
 
             user_add = input()
+            if not check_user_in_list(user_add):
+                print('Set user as admin?')
+                lcd.clear()
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string('Set user as admin?')
+                lcd.cursor_pos = (2, 0)
+                lcd.write_string('Button 1: YES')
+                lcd.cursor_pos = (3, 0)
+                lcd.write_string('Button 2: NO')
 
-            print('Set user as admin?')
-            lcd.clear()
-            lcd.cursor_pos = (0, 0)
-            lcd.write_string('Set user as')
-            lcd.cursor_pos = (1, 0)
-            lcd.write_string('admin?')
-
-            while button_response1:
-                time.sleep(1)
-
-                # dev_input = input()  # DEV CODE
-
-                if GPIO.input(button1) == 0:
-                    # if dev_input == "y":  # DEV CODE
-                    button_response1 = False
-
-                    print('Setting new user as admin...')
-                    lcd.clear()
-                    lcd.cursor_pos = (0, 0)
-                    lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1, 0)
-                    lcd.write_string('as admin...')
+                while button_response1:
                     time.sleep(1)
+                    if GPIO.input(button1) == 0:
+                        button_response1 = False
 
-                    add_user(user_add, 1)
+                        print('Setting new user as admin...')
+                        lcd.clear()
+                        lcd.cursor_pos = (0, 0)
+                        lcd.write_string('Setting new user')
+                        lcd.cursor_pos = (1, 0)
+                        lcd.write_string('as admin...')
+                        time.sleep(1)
 
-                elif GPIO.input(button2) == 0:
-                    # elif dev_input == "n":  # DEV CODE
-                    button_response1 = False
+                        add_user(user_add, 1)
 
-                    print('Setting new user as default...')
-                    lcd.clear()
-                    lcd.cursor_pos = (0, 0)
-                    lcd.write_string('Setting new user')
-                    lcd.cursor_pos = (1, 0)
-                    lcd.write_string('as default...')
-                    time.sleep(1)
+                    elif GPIO.input(button2) == 0:
+                        button_response1 = False
 
-                    add_user(user_add, 0)
-                    time.sleep(1)
-                    # break
+                        print('Setting new user as default...')
+                        lcd.clear()
+                        lcd.cursor_pos = (0, 0)
+                        lcd.write_string('Setting new user')
+                        lcd.cursor_pos = (1, 0)
+                        lcd.write_string('as default...')
+                        time.sleep(1)
+
+                        add_user(user_add, 0)
+                        time.sleep(1)
 
         # Remove user sub-menu
         elif GPIO.input(button2) == 0:
-            # elif dev_input == "n":  # DEV CODE
             button_response = False
 
             print('REMOVE USER')
@@ -147,6 +135,29 @@ def admin_menu():
 
             user_remove = input()
             remove_user(user_remove)
+
+
+def check_user_in_list(user):
+    # if user already in user list
+    if user in card_numbers:
+        print('User already in system')
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('User already in')
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('system!!!')
+        time.sleep(3)
+
+        print('Add process cancelled')
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('Add user process')
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('cancelled!!!')
+        time.sleep(3)
+        return True
+    else:
+        return False
 
 
 # Function adds users if they are not found in user list and sets new user to either admin or default
@@ -164,24 +175,6 @@ def add_user(user, is_admin):
         lcd.write_string('New user added')
         time.sleep(2)
         lcd.clear()
-
-    # if user already in user list
-    else:
-        print('User already in system')
-        lcd.clear()
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('User already in')
-        lcd.cursor_pos = (1, 0)
-        lcd.write_string('system!!!')
-        time.sleep(3)
-
-        print('Add process cancelled')
-        lcd.clear()
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('Add user process')
-        lcd.cursor_pos = (1, 0)
-        lcd.write_string('cancelled!!!')
-        time.sleep(3)
 
 
 # Function removes selected user from the user list
@@ -209,7 +202,10 @@ def remove_user(user):
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('User not in list!')
-        scroll_text('removal process cancelled', 1)
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('removal process')
+        lcd.cursor_pos = (2, 0)
+        lcd.write_string('cancelled')
 
 
 # Function turns activates machine while displaying the amount of time left before machine deactivates
@@ -233,7 +229,7 @@ def timer(user_type):
 
             # Timer escape feature
             if GPIO.input(button2) == 0:
-                print('Exited timer')
+                # print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
@@ -250,6 +246,11 @@ def timer(user_type):
 
         session_usage = f'{current_user.number}, {default_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
         print(session_usage)
+        session_data = json.dumps(session_usage)
+        # send_data(session_data)
+        '''
+        
+        '''
 
     elif user_type == 'admin':
         admin_time_spent = 0
@@ -281,6 +282,8 @@ def timer(user_type):
 
         session_usage = f'{current_user.number}, {admin_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
         print(session_usage)
+        session_data = json.dumps(session_usage)
+        # send_data(session_data)
 
     GPIO.output(machine_pin, False)  # turn off machine
 
@@ -290,6 +293,12 @@ def timer(user_type):
     lcd.write_string('Timer finished!')
     time.sleep(1)
     lcd.clear()
+
+
+'''Developed for 16x2 LCD
+Starts printing string at last digit panel on screen,
+then carries the text forward
+'''
 
 
 def scroll_text(long_text, line_number):
@@ -306,44 +315,18 @@ def scroll_text(long_text, line_number):
     lcd.clear()
 
 
-def send_data():
-    card_data = json.dumps(card_numbers)
-    print(card_data)
+# mysql code
+'''
+db = mysql.connector.connect(
+    host="",
+    user="FabFive",
+    passwd="FabFive",
+    database="Fablab"
+)
 
-    lcd.clear()
-    lcd.cursor_pos = (0, 0)
-    lcd.write_string('Connecting to')
-    lcd.cursor_pos = (1, 0)
-    lcd.write_string('server...')
-    time.sleep(1)
-
-    bytes_to_send = card_data.encode('utf-8')
-    server_address = ('192.168.254.209', 2222)
-    buffer_size = 1024
-    udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp_client.settimeout(20)  # testing 20 second unresponsive
-    try:
-        udp_client.sendto(bytes_to_send, server_address)
-
-        response, address = udp_client.recvfrom(buffer_size)
-        response = response.decode('utf-8')
-        print('Response from Server', response)
-        print('Server IP Address: ', address[0])
-        print('Server Port: ', address[1])
-
-        lcd.clear()
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('Reached server!')
-        time.sleep(1)
-    except socket.timeout:
-        print('ERROR: Cannot reach server')
-        lcd.clear()
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('ERROR: Server')
-        lcd.cursor_pos = (1, 0)
-        lcd.write_string('unavailable')
-        time.sleep(5)
-
+my_cursor = db.cursor()
+my_cursor.execute("INSERT INTO Fablab (userID, time_spent, start, stop) VALUES()")
+'''
 
 # This while loop is the main loop
 while loop:
@@ -358,7 +341,6 @@ while loop:
             # must cast to int first, because it's str, which would cause truthy
             # for '0' instead of falsy for 0
         user_file.close()
-        # print(card_numbers)  # Read out the card numbers in the file
 
     # if file not found, create the card list file
     except FileNotFoundError:
@@ -368,7 +350,7 @@ while loop:
 
         print('Created file')
 
-    send_data()
+    card_data = json.dumps(card_numbers)  # converts list of card numbers to JSON
     lcd.clear()
 
     boot_up()  # just prints text on screens
@@ -405,7 +387,12 @@ while loop:
         time.sleep(1)
 
         print('To join the system, call admin for assistance')
-        scroll_text('To join the system, call admin for assistance', 1)
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('To join the system,')
+        lcd.cursor_pos = (2, 0)
+        lcd.write_string('call admin for')
+        lcd.cursor_pos = (3, 0)
+        lcd.write_string('assistance')
     # if user is found
     else:
         # If admin scans launch admin menu (function)
@@ -421,13 +408,10 @@ while loop:
 
             while button_response:
                 time.sleep(1)
-                # dev_input = input()  # DEV CODE
-                # if dev_input == "y":  # DEV CODE
                 if GPIO.input(button1) == 0:
                     lcd.clear()
                     button_response = False
                     admin_menu()
-                # elif dev_input == "n":  # DEV CODE
                 elif GPIO.input(button2) == 0:
                     button_response = False
                     print('Starting Machine...')
