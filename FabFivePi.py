@@ -10,7 +10,7 @@ import csv
 import RPi.GPIO as GPIO
 from RPLCD.i2c import CharLCD
 import json
-# import mysql.connector
+import mysql.connector
 
 loop = True
 
@@ -28,8 +28,9 @@ lcd = CharLCD('PCF8574', 0x27)
 
 card_numbers = {}
 
-minutes = 5
-seconds_per_minute = 60  # DEV CODE temporary number
+machine_name = 'Bandsaw 1'
+minutes = 5  # change this to manipulate time
+seconds_per_minute = 60
 
 
 class CardUser:
@@ -42,9 +43,9 @@ class CardUser:
 
 # This function will display "start-up" screen for our device
 def boot_up():
-    print('MACHINE ONE')  # Dev code
+    print(machine_name)  # Dev code
     lcd.cursor_pos = (0, 0)
-    lcd.write_string('MACHINE ONE')
+    lcd.write_string(machine_name)
     time.sleep(1)
 
     print('Please scan card')  # Dev code
@@ -59,9 +60,10 @@ def admin_menu():
 
     print('1. Add user?')
     print('2. Remove user?')
-    lcd.cursor_pos = (0, 0)
+
+    lcd.cursor_pos = (2, 0)
     lcd.write_string('1. Add user?')
-    lcd.cursor_pos = (1, 0)
+    lcd.cursor_pos = (3, 0)
     lcd.write_string('2. Remove user?')
 
     while button_response:
@@ -248,9 +250,10 @@ def timer(user_type):
         print(session_usage)
         session_data = json.dumps(session_usage)
         # send_data(session_data)
-        '''
-        
-        '''
+
+        my_cursor.execute("INSERT INTO fablab(userID, adminStatus, machineType, date, startTime, endTime) VALUES(current_user.number, 0, machine_name, CURRENT_DATE(), start_time, stop_time)")
+        db.commit()
+
 
     elif user_type == 'admin':
         admin_time_spent = 0
@@ -284,6 +287,8 @@ def timer(user_type):
         print(session_usage)
         session_data = json.dumps(session_usage)
         # send_data(session_data)
+        my_cursor.execute("INSERT INTO fablab(userID, adminStatus, machineType, date, startTime, endTime) VALUES(current_user.number, 1, machine_name, CURRENT_DATE(), start_time, stop_time)")
+        db.commit()
 
     GPIO.output(machine_pin, False)  # turn off machine
 
@@ -316,17 +321,15 @@ def scroll_text(long_text, line_number):
 
 
 # mysql code
-'''
-db = mysql.connector.connect(
-    host="",
-    user="FabFive",
-    passwd="FabFive",
-    database="Fablab"
-)
 
+db = mysql.connector.connect(
+    host="10.159.148.0",
+    user="machine1",
+    passwd="machine1",
+    database="fablab"
+)
 my_cursor = db.cursor()
-my_cursor.execute("INSERT INTO Fablab (userID, time_spent, start, stop) VALUES()")
-'''
+
 
 # This while loop is the main loop
 while loop:
