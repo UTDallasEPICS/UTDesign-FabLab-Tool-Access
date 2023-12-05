@@ -1,5 +1,12 @@
 # FabFive Software, Version: FabFivePi V8
+# FabFive Software, Version: FabFivePi V8
 """
+FabFivePi V8.0
+Features:
+- Changed runtime storage of card list data from lists to dictionary
+- Developing process to send data to server as JSON string
+    - See send_data() at line 312
+- Added some server/client socket code
 FabFivePi V8.0
 Features:
 - Changed runtime storage of card list data from lists to dictionary
@@ -28,6 +35,7 @@ my cursor = db.cursor
 loop = True
 
 '''Pin declarations'''
+'''Pin declarations'''
 button1 = 13
 button2 = 11
 machine_pin = 12
@@ -41,8 +49,10 @@ lcd = CharLCD(pin_rs=15, pin_rw=18, pin_e=16, pins_data=[21, 22, 23, 24],
               numbering_mode=GPIO.BOARD)
 
 card_numbers = {}
+card_numbers = {}
 
 minutes = 5
+seconds_per_minute = 60  # DEV CODE temporary number
 seconds_per_minute = 60  # DEV CODE temporary number
 
 
@@ -167,7 +177,9 @@ def add_user(user, is_admin):
             csv_writer = csv.writer(user_file)
             csv_writer.writerow([user] + [is_admin])
             card_numbers.update({user: is_admin})
+            card_numbers.update({user: is_admin})
 
+        print({True: 'User set to admin!', False: 'User set to default!'}[is_admin])
         print({True: 'User set to admin!', False: 'User set to default!'}[is_admin])
         lcd.clear()
         lcd.cursor_pos = (0, 0)
@@ -178,13 +190,16 @@ def add_user(user, is_admin):
     # if user already in user list
     else:
         print('User already in system')
+        print('User already in system')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
+        lcd.write_string('User already in')
         lcd.write_string('User already in')
         lcd.cursor_pos = (1, 0)
         lcd.write_string('system!!!')
         time.sleep(3)
 
+        print('Add process cancelled')
         print('Add process cancelled')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
@@ -199,6 +214,7 @@ def remove_user(user):
     # check if user is currently in list
     if user in card_numbers:
         card_numbers.pop(user)
+        card_numbers.pop(user)
 
         print('User removed')
         lcd.clear()
@@ -208,6 +224,9 @@ def remove_user(user):
 
         with open("fablist.csv", "w") as user_file:
             csv_writer = csv.writer(user_file, delimiter=',')
+
+            for dict_number, dict_admin in card_numbers.items():
+                csv_writer.writerow([dict_number] + [str(dict_admin)])  # important to put [] so commas appear correctly
 
             for dict_number, dict_admin in card_numbers.items():
                 csv_writer.writerow([dict_number] + [str(dict_admin)])  # important to put [] so commas appear correctly
@@ -366,6 +385,45 @@ def send_data():
         time.sleep(5)
 
 
+def send_data():
+    card_data = json.dumps(card_numbers)
+    print(card_data)
+
+    lcd.clear()
+    lcd.cursor_pos = (0, 0)
+    lcd.write_string('Connecting to')
+    lcd.cursor_pos = (1, 0)
+    lcd.write_string('server...')
+    time.sleep(1)
+
+    bytes_to_send = card_data.encode('utf-8')
+    server_address = ('192.168.254.209', 2222)
+    buffer_size = 1024
+    udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_client.settimeout(20)  # testing 20 second unresponsive
+    try:
+        udp_client.sendto(bytes_to_send, server_address)
+
+        response, address = udp_client.recvfrom(buffer_size)
+        response = response.decode('utf-8')
+        print('Response from Server', response)
+        print('Server IP Address: ', address[0])
+        print('Server Port: ', address[1])
+
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('Reached server!')
+        time.sleep(1)
+    except socket.timeout:
+        print('ERROR: Cannot reach server')
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('ERROR: Server')
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('unavailable')
+        time.sleep(5)
+
+
 # This while loop is the main loop
 while loop:
     time.sleep(1)
@@ -377,10 +435,14 @@ while loop:
         for line in csv_reader:
             card_numbers.update({line[0]: int(line[1])})
             # must cast to int first, because it's str, which would cause truthy
+            card_numbers.update({line[0]: int(line[1])})
+            # must cast to int first, because it's str, which would cause truthy
             # for '0' instead of falsy for 0
         user_file.close()
         # print(card_numbers)  # Read out the card numbers in the file
+        # print(card_numbers)  # Read out the card numbers in the file
 
+    # if file not found, create the card list file
     # if file not found, create the card list file
     except FileNotFoundError:
         print('FILE NOT FOUND')
@@ -388,6 +450,18 @@ while loop:
             csv_writer = csv.writer(user_file, delimiter=',')
 
         print('Created file')
+
+    send_data()
+    lcd.clear()
+
+    boot_up()  # just prints text on screens
+
+    card_number = input()  # DEV CODE
+    lcd.clear()
+    if card_number == "stop":  # DEV CODE
+        loop = False
+        break
+    current_user = CardUser(card_number)
 
     send_data()
     lcd.clear()
@@ -416,11 +490,14 @@ while loop:
         lcd.clear()
 
         current_user.is_admin = card_numbers.get(current_user.number)
+        current_user.is_admin = card_numbers.get(current_user.number)
 
     # If user not recognized, deny access, just say "To get added call Admin"
     if current_user.number not in card_numbers.keys():
+    if current_user.number not in card_numbers.keys():
         lcd.clear()
         lcd.cursor_pos = (0, 0)
+        print('User not found')
         print('User not found')
         lcd.write_string('User not found')
         time.sleep(1)
