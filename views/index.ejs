@@ -1,82 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title> Hello World </title>
-  <link rel="stylesheet"
-  href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="shortcut icon" type="image/jpg" href="address-card-regular.svg"/>
-  <link rel="stylesheet" href="styles.css">
-</head>
+    <head>
+        <title> UTD Tool Access </title>
+       <link rel="stylesheet"
+        href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link rel="shortcut icon" type="image/jpg" href="address-card-regular.svg"/>
+        <link rel="stylesheet" href="styles.css">
+    </head>
 
-<body>
-  <div class="section">
-    <div class="header">
-        <h1>UTD Tool Access Portal</h1>
-        <div class="search">
-         <form action="#" class="search-bar">
-            <input type="text"
-                   placeholder="Search Courses"
-                   name="search">
-            <button>
-                <i class="fa-solid fa-magnifying-glass"
-                   style="font-size: 18px;">
-                </i>
-            </button>
-        </form>
-        </div>
-    </div>
-
-    <div class="footer">
-        <div class="download">
-         <form action="#" class="button-bar">
-            <button>
-                <i class="fa-solid fa-download"
-                   style="font-size: 18px;">
-                </i>
-            </button>
-        </form>
-        </div>
-    </div>
-
-    <input type="checkbox" name="" id="check">
-    <div class="container">
-        <label for="check">
-            <span class="fas fa-times" id="times"></span>
-            <span class="fas fa-bars" id="bars"></span>
-        </label>
-        <div class="head">menu</div>
-        <div class="menu">
-            <div class="item"><a href="#"><i class="fa-solid fa-house"></i>Home</a></div>
-            <div class="item">
-                <li>
-                    <a class="sub-btn">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>Tools
-                        <i class="fas fa-angle-right dropdown"></i>
-                    </a>
-                </li>
+    <body> 
+    <div class="section">
+        <div class="header">
+            <h1>UTD Tool Access Portal</h1>
+            <div class="search">
+            <form action="#" class="search-bar">
+                <input type="text"
+                    placeholder="Search Courses"
+                    name="search">
+                <button>
+                    <i class="fa-solid fa-magnifying-glass"
+                    style="font-size: 18px;">
+                    </i>
+                </button>
+            </form>
             </div>
         </div>
-    </div>
+        <div class="footer">
+            <div class="download">
+            <form action="#" class="button-bar">
+                <button>
+                    <i class="fa-solid fa-download"
+                    style="font-size: 18px;">
+                    </i>
+                </button>
+            </form>
+            </div>
+        </div>
 
-    <div class="table-container">
-      <table>
-          <thead>
-              <tr>
-                  <th>User ID</th>
-                  <th>Admin Status</th>
-              </tr>
-          </thead>
-          <tbody>
-              <% users.forEach(user => { %>
-                  <tr>
-                      <td><%= user.userID %></td>
-                      <td><%= user.AdminStatus %></td>
-                  </tr>
-              <% }); %>
-          </tbody>
-      </table>
-    </div>
+        <input type= "checkbox" name="" id="check">
+            <div class="container">
+                <label for = "check">
+                    <span class = "fas fa-times" id="times"></span>
+                    <span class="fas fa-bars" id="bars"></span>
+                </label>
+                <div class="head">menu</div>
+                <div class="menu"></div>
+                    <div class ="sidebar close">
+                        <ul class="nav-links">
+                        <li>
+                            <a href="#">
+                                <i class="fa-solid fa-house"></i>
+                            <input type= "checkbox2" name="" id="check2">
+                            <label for = "check2">
+                            <span class="link_name">Home</span>
+                            </label>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="iocn-link">
+                            <a href="#">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <span class="link_name">Tools</span>
+                            </a>
+                            <i class="fas fa-angle-right dropdown"></i>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a class="link_name" href="#">Tools</a></li>
+                            <li><a href="#">Drill </a></li>
+                        </ul>
+                        </li>
+                        <li>
+                        <div class="iocn-link">
+                        <a href="#">
+                            <i class="fa-solid fa-business-time"></i>
+                            <span class="link_name">Time</span>
+                        </a>
+                        <i class="fas fa-angle-right dropdown"></i>
+                        </div>
+                        <ul class="sub-menu">
+                        <li><a href="#">Student Name</a></li>
+                        <li><a href="#"> Times</a></li>
+                        </ul>
+                    </li>
+                </div>
+            </div> 
 
-  </div> 
-</body>
-</html>
+            <div class="table-container">
+                <table id="userTable">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Admin Status</th>
+                            <th>Machine Type</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user.userID %></td>
+                                <!-- if userAdminstatus = 1, then say true, else false -->
+                                <td><%= user.AdminStatus === 1 ? 'Yes' : 'No' %></td>
+                                <td><%= user.MachineType %></td>
+                                <td><%= user.Date.toLocaleDateString() %></td>
+                                <td><%= user.StartTime %></td>
+                                <td><%= user.EndTime %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                </div>
+
+       <!-- </div>  -->
+      
+    </div>
+    </body>
+</html> 

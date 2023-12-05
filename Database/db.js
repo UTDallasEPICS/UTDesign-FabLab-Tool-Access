@@ -12,16 +12,6 @@ const db = new sqlite3.Database('./database.db', sqlite3.OPEN_READWRITE, (err) =
 
 const sqlFile = './Database/SQLite.sql';
 
-// let sql = 'CREATE TABLE IF NOT EXISTS USERS (userID TEXT PRIMARY KEY, AdminStatus INTEGER, MachineType TEXT, Date TEXT, StartTime TEXT)';
-// db.run(sql, [], (err) => {
-//     if (err) {
-//         console.error(err.message);
-//         console.error('Failed to create table USERS!');
-//     } else {
-//         console.log('Table USERS created successfully!');
-//     }
-//     });
-
 // Read the SQL commands from the file
 const sql = fs.readFileSync(sqlFile, 'utf8');
 
@@ -38,3 +28,13 @@ db.exec(sql, (execErr) => {
 });
 
 module.exports = db;
+
+// let sql = 'CREATE TABLE IF NOT EXISTS USERS (userID TEXT PRIMARY KEY, AdminStatus INTEGER, MachineType TEXT, Date TEXT, StartTime TEXT)';
+// db.run(sql, [], (err) => {
+//     if (err) {
+//         console.error(err.message);
+//         console.error('Failed to create table USERS!');
+//     } else {
+//         console.log('Table USERS created successfully!');
+//     }
+//     });
