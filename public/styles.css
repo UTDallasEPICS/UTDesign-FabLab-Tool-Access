@@ -215,7 +215,7 @@ transform: translateX(0);
     display: none;
 }
 
-.section{
+/* .section{
     min-height: 100vh;
     background-image: url(the-best-16-purple-1080p-blue-gaming-background-popularpicinterest.jpg);
     background-position: center;
@@ -223,11 +223,11 @@ transform: translateX(0);
     background-repeat: no-repeat;
     transition: 0.5s;
     filter: brightness(100%);
-}
+} */
 
 .download{
     position: absolute;
-    bottom: 10px;
+    bottom: 70px;
     left: 100%;
     margin-left: -104.5px;
 }
@@ -246,8 +246,42 @@ transform: translateX(0);
     align-items: center;
     border-radius: 60px;
     padding: 10px 20px;
+    /* added by Aadesh below */
+    position: fixed;
     cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+    transition: background 0.5s ease;
 }
+.button-bar:hover {
+    background: rgb(4, 138, 55);
+}
+
+/* download btn tooltip added by Aadesh */
+.tooltip {
+    font-size: small;
+    visibility: hidden;
+    width: 120px;
+    height: 30px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%; /* Position above the button */
+    left: 50%;
+    margin-left: -160px; /* Center the tooltip horizontally */
+    opacity: 0;
+    transition: opacity 0.3s;
+    transform: translateY(-60%);
+}
+
+.button-bar:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
 
 /* new table stuff */
 .table-container {
@@ -271,11 +305,3 @@ th, td {
     padding: 15px;
     text-align: left;
 }
-
-
-
-
-
-
-
- 

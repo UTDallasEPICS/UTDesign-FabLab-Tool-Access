@@ -1,14 +1,14 @@
 const fs = require('fs');
-//const db = require('./Database/db'); // Import the SQLite database module
 const express = require('express'); // Import the ExpressJS framework
-const mysql = require('mysql'); // Import the MySQL database module
+const pool = require('./database.js');
+const papa = require('papaparse');
+var table = 'Fablab'; //MySQL table name
 
 //Express.js connection:
 const app = express();
 const port = 3000;
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
 
 //Connection to local mysql server:
 // const connection = mysql.createConnection({
@@ -18,89 +18,61 @@ app.use(express.static(__dirname + '/public'));
 //   database: 'testdb' //MySQL database name
 // });
 
-const connection = mysql.createConnection({
-  host: 'sql3.freesqldatabase.com',    
-  user: 'sql3667697', 
-  password: '1dmeYAZjPr', 
-  database: 'sql3667697' //MySQL database name
-});
+//Display the log table in main page
+app.get('/', (req, res) => {
+  const selectQuery = `SELECT * FROM ${table}`;
 
-// Connect to the MySQL server
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL server:', err);
-    return;
-  }
-  console.log('Connected to MySQL server');
-
-  const database = connection.config.database;
-
-  // Select the MySQL database
-  connection.query(`USE ${database}`, (err) => {
+  pool.query(selectQuery, (err, results, fields) => {
     if (err) {
-      console.error('Error selecting database:', err);
-      return;
-    }
-    console.log(`Database selected: ${database}`);
-  });
-});
-
-const createTable = () => {
-  // Create the USERS table if it doesn't exist
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS USERS (
-      userID INT NOT NULL PRIMARY KEY,
-      AdminStatus INT NOT NULL,
-      MachineType TEXT NOT NULL,
-      Date DATE NOT NULL,
-      StartTime TIME NOT NULL,
-      EndTime TIME NOT NULL ); `;
-
-  connection.query(createTableQuery, (err, result) => {
-    if (err) {
-      console.error('ERROR creating table:', err);
+      console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
       return;
     }
 
-    if (result.warningStatus === 0) {
-      console.log('Table successfully created!');
-    } else {
-    console.log('Existing table found.');
+    res.render('index', { results });
+  });
+});
+
+//Download CSV
+app.get('/api/downloadCSV', (req, res) => {
+  const selectQuery = `SELECT * FROM ${table}`;
+
+  pool.query(selectQuery, (err, results, fields) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
+      return;
     }
+
+    //Using papaparse to convert query result to csv file
+    const csv = papa.unparse(results);
+    
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=\"Fablab_Log.csv\"');
+
+    //Send CSV to client
+    res.status(200).send(csv);
   });
-};
+});
 
-const readData = () => {
-  // Read the data from the database
-  app.get('/', (req, res) => {
-      const selectQuery = 'SELECT * FROM Fablab';
 
-      //db.all(sql, [], (err, users) => {
-      connection.query(selectQuery, (err, users) => {
-        if (err) {
-            console.error(err.message);
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-        // rows.forEach((row) => {
-        //     console.log(row);
-        else {
-            res.render('index', { users });
-        }
-      });
-  });
-};
+// Handle Drill button click on the server side
+// app.post('/drill', (req, res) => {
+//   console.log('Drill button clicked on the server!');
+//   // Your custom logic for the Drill button click on the server side
 
-//createTable();
-readData();
+//   res.status(200).send('Drill button clicked on the server!');
+// });
+
+app.use(express.static(__dirname + '/public'));
 
 app.listen(port, () => {
     console.log(`Server is listening at http://localhost:${port}`);
   });
 
-  // Close the MySQL connection when the application is shutting down
+// Close the MySQL connection when the application is shutting down (Ctrl + C on terminal)
 process.on('SIGINT', () => {
-  connection.end((err) => {
+  pool.end((err) => {
     if (err) {
       console.error('Error closing MySQL connection:', err);
       process.exit(1);

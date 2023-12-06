@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- href="../server.js" -->
+        <script src="client.js" defer></script>
         <title> UTD Tool Access </title>
-       <link rel="stylesheet"
+        <link rel="stylesheet"
         href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="shortcut icon" type="image/jpg" href="address-card-regular.svg"/>
         <link rel="stylesheet" href="styles.css">
@@ -27,12 +29,13 @@
         </div>
         <div class="footer">
             <div class="download">
-            <form action="#" class="button-bar">
+            <form action="#" class="button-bar" id="download-btn">
                 <button>
                     <i class="fa-solid fa-download"
                     style="font-size: 18px;">
                     </i>
                 </button>
+                <span class="tooltip">Download Table</span>
             </form>
             </div>
         </div>
@@ -66,7 +69,7 @@
                         </div>
                         <ul class="sub-menu">
                             <li><a class="link_name" href="#">Tools</a></li>
-                            <li><a href="#">Drill </a></li>
+                            <li><a href="#" id="drillButton">Drill </a></li>
                         </ul>
                         </li>
                         <li>
@@ -90,7 +93,7 @@
                     <thead>
                         <tr>
                             <th>User ID</th>
-                            <th>Admin Status</th>
+                            <th>Is Admin?</th>
                             <th>Machine Type</th>
                             <th>Date</th>
                             <th>Start Time</th>
@@ -98,7 +101,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% users.forEach(user => { %>
+                        <% results.forEach(user => { %>
                             <tr>
                                 <td><%= user.userID %></td>
                                 <!-- if userAdminstatus = 1, then say true, else false -->
