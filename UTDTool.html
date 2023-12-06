@@ -4,6 +4,7 @@
         <title> UTD Tool Access </title>
        <link rel="stylesheet"
         href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'> 
         <link rel="shortcut icon" type="image/jpg" href="address-card-regular.svg"/>
         <link rel="stylesheet" href="style3.css">
 
@@ -36,51 +37,486 @@
             </form>
             </div>
         </div>
-     <input type= "checkbox" name="" id="check">
-            <div class="container">
-                <label for = "check">
-                    <span class = "fas fa-times" id="times"></span>
+        <div class="sidebar close">
                     <span class="fas fa-bars" id="bars"></span>
-                </label>
-                <div class="head">menu</div>
-                <div class="menu"></div>
-                    <div class ="sidebar close">
-                        <ul class="nav-links">
-                          <li>
-                            <a href="#">
-                                <i class="fa-solid fa-house"></i>
-                            <input type= "checkbox2" name="" id="check2">
-                            <label for = "check2">
-                              <span class="link_name">Home</span>
-                            </label>
-                            </a>
-                          </li>
-                          <li>
-                            <div class="iocn-link">
-                            <a href="#">
-                                <i class="fa-solid fa-screwdriver-wrench"></i>
-                              <span class="link_name">Tools</span>
-                            </a>
-                            <i class="fas fa-angle-right dropdown"></i>
-                          </div>
-                          <ul class="sub-menu">
-                            <li><a class="link_name" href="#">Tools</a></li>
-                            <li><a href="#">Drill </a></li>
-                          </ul>
-                        </li>
-                        <li>
-                          <div class="iocn-link">
-                          <a href="#">
-                            <i class="fa-solid fa-business-time"></i>
-                            <span class="link_name">Time</span>
-                          </a>
-                          <i class="fas fa-angle-right dropdown"></i>
-                        </div>
-                        <ul class="sub-menu">
-                          <li><a href="#">Student Name</a></li>
-                          <li><a href="#"> Times</a></li>
-                        </ul>
-                      </li>
+          <ul class="nav-links">
+            <li>
+              <a href="#">
+                <i class="fa-solid fa-house" ></i>
+                <span class="link_name">Home</span>
+              </a>
+            </li>
+            <li>
+              <div class="iocn-link">
+                <a href="#">
+                  <i class="fa-solid fa-screwdriver-wrench" ></i>
+                  <span class="link_name">Machines</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow' ></i>
+              </div>
+              <ul class="sub-menu">
+                <li><a class="link_name" href="#">Machines</a></li>
+                <li><a href="#">HTML & CSS</a></li>
+                <li><a href="#">JavaScript</a></li>
+                <li><a href="#">PHP & MySQL</a></li>
+                <li><a href="#">HTML & CSS</a></li>
+                <li><a href="#">JavaScript</a></li>
+                <li><a href="#">PHP & MySQL</a></li>
+              </ul>
+            </li>
+            <li>
+              <div class="iocn-link">
+                <a href="#">
+                  <i class="fa-solid fa-business-time" ></i>
+                  <span class="link_name">Time</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow' ></i>
+              </div>
+              <ul class="sub-menu">
+                <li><a class="link_name" href="#">Time</a></li>
+                <div class="dropdown">
+                  <button onclick="myFunction('january')" class="dropbtn">January</button>
+<div id="januaryDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+
+<button onclick="myFunction('february')" class="dropbtn">February</button>
+<div id="februaryDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+</div>
+
+<button onclick="myFunction('march')" class="dropbtn">March</button>
+<div id="marchDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+<button onclick="myFunction('april')" class="dropbtn">April</button>
+<div id="aprilDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+</div>
+
+<button onclick="myFunction('may')" class="dropbtn">May</button>
+<div id="mayDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+
+<button onclick="myFunction('june')" class="dropbtn">June</button>
+<div id="juneDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+</div>
+
+<button onclick="myFunction('july')" class="dropbtn">July</button>
+<div id="julyDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+
+<button onclick="myFunction('august')" class="dropbtn">August</button>
+<div id="augustDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+
+<button onclick="myFunction('september')" class="dropbtn">September</button>
+<div id="septemberDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+
+</div>
+
+<button onclick="myFunction('october')" class="dropbtn">October</button>
+<div id="octoberDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+
+<button onclick="myFunction('november')" class="dropbtn">November</button>
+<div id="novemberDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+</div>
+
+<button onclick="myFunction('december')" class="dropbtn">December</button>
+<div id="decemberDropdown" class="dropdown-content">
+  <li><a href="#">1</a></li>
+  <li><a href="#">2</a></li>
+  <li><a href="#">3</a></li>
+  <li><a href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a href="#">6</a></li>
+  <li><a href="#">7</a></li>
+  <li><a href="#">8</a></li>
+  <li><a href="#">9</a></li>
+  <li><a href="#">10</a></li>
+  <li><a href="#">11</a></li>
+  <li><a href="#">12</a></li>
+  <li><a href="#">13</a></li>
+  <li><a href="#">14</a></li>
+  <li><a href="#">15</a></li>
+  <li><a href="#">16</a></li>
+  <li><a href="#">17</a></li>
+  <li><a href="#">18</a></li>
+  <li><a href="#">19</a></li>
+  <li><a href="#">20</a></li>
+  <li><a href="#">21</a></li>
+  <li><a href="#">22</a></li>
+  <li><a href="#">23</a></li>
+  <li><a href="#">24</a></li>
+  <li><a href="#">25</a></li>
+  <li><a href="#">26</a></li>
+  <li><a href="#">27</a></li>
+  <li><a href="#">29</a></li>
+  <li><a href="#">30</a></li>
+  <li><a href="#">31</a></li>
+</div>
+                </div>
+              </ul>
+            </li>
+        </li>
+      </ul>
+        </section>
+        <script>
+        let arrow = document.querySelectorAll(".arrow");
+        for (var i = 0; i < arrow.length; i++) {
+          arrow[i].addEventListener("click", (e)=>{
+         let arrowParent = e.target.parentElement.parentElement;
+         arrowParent.classList.toggle("showMenu");
+          });
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector("#bars");
+        console.log(sidebarBtn);
+        sidebarBtn.addEventListener("click", ()=>{
+          sidebar.classList.toggle("close");
+        });
+        /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction(month) {
+    var dropdown = document.getElementById(month + 'Dropdown');
+    dropdown.classList.toggle('show');
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+        </script>
                 </div>
             </div> 
        </div> 
