@@ -33,6 +33,21 @@ app.get('/', (req, res) => {
   });
 });
 
+//Sort by machine type
+// app.get(`/api/filterByMachineType?machineType=${machineType}`, (req, res) => {
+//   const selectQuery = `SELECT * FROM ${table} WHERE Machine = ${machineType}`;
+
+//   pool.query(selectQuery, (err, results, fields) => {
+//     if (err) {
+//       console.error(err.message);
+//       res.status(500).send('SQL Server Query Error.'); 
+//       return;
+//     }
+
+//     res.send(results);
+//   });
+// });
+
 //Download CSV
 app.get('/api/downloadCSV', (req, res) => {
   const selectQuery = `SELECT * FROM ${table}`;
