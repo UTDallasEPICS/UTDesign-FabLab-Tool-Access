@@ -7,7 +7,7 @@
 }
 
 body {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .sidebar {
@@ -297,6 +297,8 @@ span {
 }
 
 .header {
+    position: fixed;
+    z-index: 100;
     width: 100%;
     height: 90px;
     background: linear-gradient(30deg, #7114c2, #0a99a7)
@@ -309,11 +311,24 @@ h1 {
     padding-top: 15px;
     font-size: 30px;
     font-weight: bold;
-    padding: 30px;
+    padding: 25px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 3px;
     float: left;
+}
+
+h2 {
+    color: white;
+    margin: 0%;
+    margin-left: 0px;
+    padding-top: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 25px;
+    /* text-transform: uppercase; */
+    text-align: center;
+    /* letter-spacing: 3px; */
 }
 
 .search {
@@ -363,6 +378,9 @@ h1 {
     background-repeat: no-repeat;
     transition: 0.5s;
     filter: brightness(100%);
+    overflow-y: auto;
+    padding-top: 100px;
+    padding-left: 80px;
 }
 
 .download{
@@ -424,12 +442,12 @@ h1 {
 
 /* new table stuff */
 .table-container {
-    display: right;
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    /* transform: translateX(-20%); */
-    transform: translate(15%);
+    /* transform: translateX(4%); */
+    /* transform: translateY(1%); */
 }
 
 table {
@@ -446,4 +464,13 @@ table, th, td {
 th, td {
     padding: 15px;
     text-align: left;
+}
+
+#userTable {
+    visibility: hidden;
+}
+
+img {
+    float: left;
+    transform: translateY(40%);
 }

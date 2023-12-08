@@ -21,14 +21,15 @@ pool.getConnection((err, connection) => {
         if (err.code === 'ECONNREFUSED') {
             console.error('Database connection was refused.')
         }
-        console.error('Error: ', err)
+        console.error('Database connection FAIL. \n', err)
     }
-    //const database = connection.config.database;
+    else {
+        console.log('Database connection SUCCESS.');
+    }
 
     //console.log(`Connected to MySQL server: ${database}`);
-    console.log('Connected to MySQL server');
     if (connection) connection.release()
-    return
+        return
 })
 
 // Promisify for Node.js async/await.

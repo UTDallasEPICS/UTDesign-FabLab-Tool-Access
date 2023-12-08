@@ -5,6 +5,7 @@ const papa = require('papaparse');
 var table = 'Fablab'; //MySQL table name
 
 //Express.js connection:
+const hostname = "127.0.0.1";
 const app = express();
 const port = 3000;
 
@@ -25,28 +26,74 @@ app.get('/', (req, res) => {
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
       console.error(err.message);
+      res.status(500).send(`Internal Server Error! Cannot query Database ${table}.`); 
+      return;
+    }
+      res.render('index', { results });
+   
+  });
+});
+
+//Go to home page
+app.get('/api/home', (req, res) => {
+  const selectQuery = `SELECT * FROM ${table}`;
+
+  pool.query(selectQuery, (err, results, fields) => {
+    if (err) {
+      console.error(err.message);
       res.status(500).send('SQL Server Query Error.'); 
       return;
     }
-
-    res.render('index', { results });
+    
+    res.json(results);
   });
 });
 
 //Sort by machine type
-// app.get(`/api/filterByMachineType?machineType=${machineType}`, (req, res) => {
-//   const selectQuery = `SELECT * FROM ${table} WHERE Machine = ${machineType}`;
+app.get('/api/filterByMachineType', (req, res) => {
 
-//   pool.query(selectQuery, (err, results, fields) => {
-//     if (err) {
-//       console.error(err.message);
-//       res.status(500).send('SQL Server Query Error.'); 
-//       return;
-//     }
+  const machineType = req.query.machineType;
+  if (!machineType) {
+      res.status(400).send('Missing required query parameter: machineType');
+      return;
+  }
+  console.log(`Machine ${machineType} clicked on the server!`);
+  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}'`;
 
-//     res.send(results);
-//   });
-// });
+  pool.query(selectQuery, (err, results, fields) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
+      return;
+    }
+    //Send the filtered data to client (as JSON)
+    res.send(results);
+  });
+});
+
+//Sort by month and day
+app.get('/api/filterByDate', (req, res) => {
+
+  const month = req.query.month;
+  const day = req.query.day;
+  if (!month || !day) {
+      res.status(400).send('Missing required query parameter: month or day');
+      return;
+  }
+
+  console.log(`Month ${month} and Day ${day} clicked on the server!`);
+
+  const selectQuery = `SELECT * FROM ${table} WHERE DATE = '${new Date().getFullYear()}-${month}-${day}'`;
+  pool.query(selectQuery, (err, results, fields) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
+      return;
+    }
+    //Send the filtered data to client (as JSON)
+    res.send(results);
+  });
+});
 
 //Download CSV
 app.get('/api/downloadCSV', (req, res) => {
@@ -70,19 +117,10 @@ app.get('/api/downloadCSV', (req, res) => {
   });
 });
 
-
-// Handle Drill button click on the server side
-// app.post('/drill', (req, res) => {
-//   console.log('Drill button clicked on the server!');
-//   // Your custom logic for the Drill button click on the server side
-
-//   res.status(200).send('Drill button clicked on the server!');
-// });
-
 app.use(express.static(__dirname + '/public'));
 
 app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+    console.log(`Server is listening at http://${hostname}:${port}`);
   });
 
 // Close the MySQL connection when the application is shutting down (Ctrl + C on terminal)
