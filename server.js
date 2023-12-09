@@ -111,18 +111,20 @@ app.get('/api/filterByDate', (req, res) => {
 
 //Delete machine type
 app.get('/api/deleteMachine', (req, res) => {
-  //console.log('Delete machine clicked on the server!');
   const machineType = req.query.machineType;
   if (!machineType) {
       res.status(400).send('Missing required query parameter: machineType');
       return;
   }
   const deleteQuery = `DELETE FROM ${table} WHERE MachineType='${machineType}'`;
-
   pool.query(deleteQuery, (err, results, fields) => {
-    if (err || results.affectedRows === 0) {
-      //send bad response to client (popup alert that delete failed)
+    if (err) {
       console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
+      return;
+    }
+    if (results.affectedRows === 0) {
+      //send bad response to client (popup alert that delete failed)
       res.json({ success: false });
     }
     else {
@@ -181,7 +183,7 @@ app.get('/api/downloadCSV', (req, res) => {
 app.use(express.static(__dirname + '/public'));
 
 app.listen(port, () => {
-    console.log(`Server is listening at https://${hostname}:${port}`);
+    console.log(`Server is listening at http://${hostname}:${port}`);
   });
 
 // Close the MySQL connection when the application is shutting down (Ctrl + C on terminal)
