@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <!-- href="../server.js" -->
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> -->
+<!-- jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<!-- SimplePagination.js -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script> -->
 
     <script src="client.js" defer></script>
     <meta charset="UTF-8">
@@ -48,14 +48,9 @@
             <!-- for all log data: -->
             <h2>Viewing All Log Data</h2>
             <!-- for specific machine log data: -->
-            
         </div>
         <div class="table-container">
             <table id="userTable">
-                <!-- <script>
-                    const userTable = document.querySelector('#userTable');
-                     userTable.classList.toggle('hidden');
-                  </script> -->
                 <thead>
                     <tr>
                         <th>User ID</th>
@@ -90,9 +85,9 @@
         <span class="fas fa-bars" id="bars"></span>
         <ul class="nav-links">
             <li>
-                <a href="#">
+                <a href="#" id="home_btn">
                     <i class="fa-solid fa-house"></i>
-                    <span class="link_name" id="home_btn">Home</span>
+                    <span class="link_name">Home</span>
                 </a>
             </li>
             <li>
@@ -103,7 +98,7 @@
                     </a>
                     <i class='fa-solid fa-angle-up arrow'></i>
                 </div>
-                <ul class="sub-menu" id="machine-list">
+                <!-- <ul class="sub-menu" id="machine-list">
                     <li><a class="link_name" href="#">Machines </a></li>
                     <li><a href="#">Drill</a></li>
                     <li><a href="#">Angle Grinder</a></li>
@@ -115,7 +110,13 @@
                     <li><a href="#">H. Bandsaw</a></li>
                     <li><a href="#">Table Saw</a></li>
                     <li><a href="#">Scroll Saw</a></li>
-                </ul>
+                </ul> -->
+                <ul class="sub-menu" id="machine-list">
+                    <li><a class="link_name" href="#">Machines </a></li>
+                    <% machines.forEach(machine => { %>
+                      <li><a href="#"><%= machine.MachineType %></a></li>
+                    <% }); %>
+                  </ul>
             </li>
             <li>
                 <div class="iocn-link">
@@ -533,15 +534,15 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="delete-machine-btn">
                     <i class="fa-solid fa-trash"></i>
-                    <span class="link_name" id="home_btn">Delete Machine</span>
+                    <span class="link_name">Delete Machine</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="#" id="add-machine-btn">
                     <i class="fa-solid fa-plus"></i>
-                    <span class="link_name" id="home_btn">Add Machine</span>
+                    <span class="link_name">Add Machine</span>
                 </a>
             </li>
         </ul>
@@ -551,15 +552,18 @@
             for (var i = 0; i < arrow.length; i++) {
                 arrow[i].addEventListener("click", (e) => {
                     let arrowParent = e.target.parentElement.parentElement;
+                    console.log(arrowParent.classList)
                     arrowParent.classList.toggle("showMenu");
                 });
             }
+            
             let sidebar = document.querySelector(".sidebar");
             let sidebarBtn = document.querySelector("#bars");
             console.log(sidebarBtn);
             sidebarBtn.addEventListener("click", () => {
                 sidebar.classList.toggle("close");
             });
+
             /* When the user clicks on the button,
             toggle between hiding and showing the dropdown content */
             function myFunction(month) {

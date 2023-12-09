@@ -1,9 +1,24 @@
-// $(document).ready( function () {
-//   $('#userTable').DataTable();
-// } );
 
 const padWithZero = (number) => {
   return number < 10 ? '0' + number : number;
+};
+
+// Function to update the machine list
+const updateMachineList = (machines) => {
+  const machineListContainer = document.getElementById('machine-list');
+  machineListContainer.innerHTML = ''; // Clear the existing list
+
+  // Add the 'Machines' link
+  const machinesLink = document.createElement('li');
+  machinesLink.innerHTML = '<a class="link_name" href="#">Machines </a>';
+  machineListContainer.appendChild(machinesLink);
+
+  // Add each machine to the list
+  machines.forEach(machine => {
+    const machineLink = document.createElement('li');
+    machineLink.innerHTML = `<a href="#">${machine}</a>`;
+    machineListContainer.appendChild(machineLink);
+  });
 };
 
 const updateDisplayText = () => {
@@ -48,6 +63,7 @@ const updateTable = (data) => {
   //<td>${user.Date.toLocaleDateString() == undefined ? 'N/A' : user.Date.toLocaleDateString()}</td>
 };
 
+//DOMContentLoaded Main event listener
 document.addEventListener('DOMContentLoaded', () => {
 
   if (sessionStorage) {
@@ -182,17 +198,17 @@ machineTypeLinks.forEach(link => {
 
 // -------------------------
 
-  //Get home button to display all data
-  const homeButton = document.querySelector('#home_btn');
-  homeButton.addEventListener('click', () => {
+//Get home button to display all data
+const homeButton = document.querySelector('#home_btn');
+homeButton.addEventListener('click', () => {
 
-    // Clear local storage
-    sessionStorage.removeItem('selectedMachineType');
-    sessionStorage.removeItem('selectedDate');
+  // Clear local storage
+  sessionStorage.removeItem('selectedMachineType');
+  sessionStorage.removeItem('selectedDate');
 
-    console.log('Home button clicked on the client!');
-    // Make an HTTP request to the server to get all data
-    fetch('/api/home')
+  console.log('Home button clicked on the client!');
+  // Make an HTTP request to the server to get all data
+  fetch('/api/home')
     .then(res => {
         if (!res.ok) {
             throw new Error(`Error ${res.status}: ${res.statusText}`);
@@ -238,9 +254,9 @@ machineTypeLinks.forEach(link => {
           //Create download link
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          if (index == 1) {
+          if (index === 1) {
             link.download = `Fablab_Log_${storedMachineType}.csv`
-          } else if (index == 2) {
+          } else if (index === 2) {
             link.download = `Fablab_Log_${storedDate}.csv`
           } else {
             link.download = `Fablab_Log_All.csv`
@@ -272,8 +288,39 @@ machineTypeLinks.forEach(link => {
         });
     }
 
-    //Adding/Deleting Machines: Admin Only
-    //TODO
+  //Delete existing Machine
+  const deleteButton = document.querySelector('#delete-machine-btn');
+  deleteButton.addEventListener('click', async () => {
+    console.log('Delete button clicked on the client!');
+
+    const machineName = prompt('Enter the machine type to delete:');
+    if (machineName) {
+      const confirmDelete = confirm(`Are you sure you want to delete ${machineName}?`);
+      if (confirmDelete) {
+        const response = await fetch(`/api/deleteMachine?machineType=${encodeURIComponent(machineName)}`)
+        if (response.ok) {
+          const responseData = await response.json();
+          if (responseData.success) {
+            alert('Machine deleted successfully!');
+            updateMachineList(responseData.machines);
+          }
+          else {
+            alert('Invalid machine type! No machine deleted');
+          }
+        }
+        else {
+          console.error(`Error ${response.status}: ${response.statusText}`);
+        }
+      }
+    }
+  });
+
+  //Add new machine //W.I.P
+  const addButton = document.querySelector('#add-machine-btn');
+  addButton.addEventListener('click', async () => {
+    console.log('Add button clicked on the client!');
+    alert('⚠ This feature is not yet implemented')
+  });
 
   //Make table visible
   function TableVisibility() {
