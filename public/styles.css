@@ -324,7 +324,7 @@ h2 {
     margin-left: 0px;
     padding-top: 15px;
     font-size: 30px;
-    font-weight: bold;
+    font-weight: default;
     padding: 25px;
     /* text-transform: uppercase; */
     text-align: center;
@@ -453,16 +453,22 @@ h2 {
 table {
     color: rgb(219, 212, 212);
     border-collapse: collapse;
-    width: 80%;
+    width: 69%;
     margin-top: 30px; /* Need to adjust */
+
 }
 
 table, th, td {
     border: 4px solid rgb(86, 13, 175);
 }
 
-th, td {
-    padding: 15px;
+td {
+    padding: 8px;
+    text-align: left;
+    padding-left: 12px;
+}
+th {
+    padding: 10px;
     text-align: left;
 }
 
@@ -473,4 +479,15 @@ th, td {
 img {
     float: left;
     transform: translateY(40%);
+}
+
+#credits {
+    color: #c6a0a0;
+    margin: 0%;
+    margin-left: 0px;
+    padding-top: 0px;
+    padding-left: 115px;
+    font-size: 12px;
+    /* text-transform: uppercase; */
+    /* letter-spacing: 3px; */
 }

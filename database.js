@@ -1,4 +1,5 @@
 var mysql = require('mysql')
+//var mysql = require('mysql2/promise');
 var util = require('util')
 
 var pool = mysql.createPool({
@@ -7,7 +8,7 @@ var pool = mysql.createPool({
     user: 'sql3667697', 
     password: '1dmeYAZjPr', 
     database: 'sql3667697',
-    timezone: 'utc-6' //set CST 
+    timezone: '-06:00' //set CST 
 })
 
 pool.getConnection((err, connection) => {
@@ -34,5 +35,19 @@ pool.getConnection((err, connection) => {
 
 // Promisify for Node.js async/await.
 pool.query = util.promisify(pool.query)
+
+// Function to clear records older than 5 years
+const clearOldRecords = async () => {
+    try {
+        const deleteQuery = 'DELETE FROM Fablab WHERE Date < DATE_SUB(NOW(), INTERVAL 5 YEAR)';
+        const result = await pool.query(deleteQuery);
+        console.log('Old records deleted successfully.');
+    } catch (error) {
+        console.error('Error deleting old records:', error.message);
+    }
+};
+
+  // Call the function to clear old records
+  clearOldRecords();
 
 module.exports = pool

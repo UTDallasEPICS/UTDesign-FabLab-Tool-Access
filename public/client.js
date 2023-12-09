@@ -1,7 +1,26 @@
+// $(document).ready( function () {
+//   $('#userTable').DataTable();
+// } );
 
 const padWithZero = (number) => {
   return number < 10 ? '0' + number : number;
 };
+
+const updateDisplayText = () => {
+  const optionsDisplay = document.querySelector('.options-display');
+  const machineType = sessionStorage.getItem('selectedMachineType');
+  const storedDate = sessionStorage.getItem('selectedDate');
+  //Now render it to index.ejs
+  if (machineType) {
+    optionsDisplay.innerHTML = `<h2> Sorting by Machine: ${machineType} </h2>`;
+  } else if (storedDate) {
+    const month = storedDate.split('-')[1];
+    const day = storedDate.split('-')[2];
+    optionsDisplay.innerHTML = `<h2> Sorting by Date: ${month}-${day}-${new Date().getFullYear()} </h2>`;
+  } else {
+    optionsDisplay.innerHTML = '<h2> Viewing All Log Data </h2>';
+  }
+}
 
 // Function to update the table with new data
 const updateTable = (data) => {
@@ -17,7 +36,7 @@ const updateTable = (data) => {
       const newRow = document.createElement('tr');
       newRow.innerHTML = `
           <td>${user.userID}</td>
-          <td>${user.AdminStatus == 1 ? 'Yes' : 'No'}</td>
+          <td>${user.AdminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No'}</td>
           <td>${user.MachineType}</td>
           <td>${new Date(user.Date).toLocaleDateString()}</td>
           <td>${user.StartTime}</td>
@@ -25,14 +44,15 @@ const updateTable = (data) => {
       `;
       tableBody.appendChild(newRow);
   });
+  updateDisplayText();
   //<td>${user.Date.toLocaleDateString() == undefined ? 'N/A' : user.Date.toLocaleDateString()}</td>
 };
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  if (localStorage) {
-    const storedMachineType = localStorage.getItem('selectedMachineType');
-    const storedDate = localStorage.getItem('selectedDate');
+  if (sessionStorage) {
+    const storedMachineType = sessionStorage.getItem('selectedMachineType');
+    const storedDate = sessionStorage.getItem('selectedDate');
 
     if (storedMachineType) {
       // Make an HTTP request to the server to get filtered data based on machine type
@@ -83,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to handle month and day click
   const handleDateClick = (month, day) => {
 
-    localStorage.setItem('selectedDate', `${new Date().getFullYear()}-${month}-${day}`);
+    sessionStorage.removeItem('selectedMachineType');
+    sessionStorage.setItem('selectedDate', `${new Date().getFullYear()}-${month}-${day}`);
 
     // Make an HTTP request to the server to get filtered data based on month and day
     fetch(`/api/filterByDate?month=${encodeURIComponent(month)}&day=${encodeURIComponent(day)}`)
@@ -122,7 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to handle machine type click
   const handleMachineTypeClick = (machineType) => {
 
-    localStorage.setItem('selectedMachineType', machineType);
+    sessionStorage.removeItem('selectedDate');
+    sessionStorage.setItem('selectedMachineType', machineType);
 
   // Make an HTTP request to the server to get filtered data based on machine type
   fetch(`/api/filterByMachineType?machineType=${encodeURIComponent(machineType)}`)
@@ -165,8 +187,8 @@ machineTypeLinks.forEach(link => {
   homeButton.addEventListener('click', () => {
 
     // Clear local storage
-    localStorage.removeItem('selectedMachineType');
-    localStorage.removeItem('selectedDate');
+    sessionStorage.removeItem('selectedMachineType');
+    sessionStorage.removeItem('selectedDate');
 
     console.log('Home button clicked on the client!');
     // Make an HTTP request to the server to get all data
@@ -187,18 +209,42 @@ machineTypeLinks.forEach(link => {
     });
   });
 
+  //Detect if download button is clicked
   const downloadBtn = document.getElementById('download-btn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
       console.log('Download button clicked on the client!');
-      // Make an HTTP request to the server to download the CSV
-      fetch('/api/downloadCSV')
-        .then (res => res.blob())
+
+      // Check if machine type is stored in sessionStorage
+    const storedMachineType = sessionStorage.getItem('selectedMachineType');
+    // Check if date is stored in sessionStorage
+    const storedDate = sessionStorage.getItem('selectedDate');
+
+    let downloadUrl = '/api/downloadCSV';
+
+    // Decide which parameter to include based on stored values
+    var index = 0;
+    if (storedMachineType) {
+      downloadUrl += `?machineType=${encodeURIComponent(storedMachineType)}`;
+      index = 1;
+    } else if (storedDate) {
+      downloadUrl += `?date=${encodeURIComponent(storedDate)}`;
+      index = 2;
+    }
+    // Make an HTTP request to the server to download the CSV
+      fetch(downloadUrl)
+        .then (res => res.blob()) 
         .then (blob => {
           //Create download link
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = 'Fablab_Log.csv'
+          if (index == 1) {
+            link.download = `Fablab_Log_${storedMachineType}.csv`
+          } else if (index == 2) {
+            link.download = `Fablab_Log_${storedDate}.csv`
+          } else {
+            link.download = `Fablab_Log_All.csv`
+          }
           document.body.appendChild(link);
 
           //Trigger download
@@ -207,7 +253,7 @@ machineTypeLinks.forEach(link => {
           //Remove link from DOM
           document.body.removeChild(link);
         })
-        .catch(err => console.error('Line 31:', err.message));
+        .catch(err => console.error('CSV Download Failed:', err.message));
     });
   }
   //Download button tooltip
@@ -226,6 +272,9 @@ machineTypeLinks.forEach(link => {
         });
     }
 
+    //Adding/Deleting Machines: Admin Only
+    //TODO
+
   //Make table visible
   function TableVisibility() {
     const userTable = document.querySelector('#userTable');
@@ -234,9 +283,14 @@ machineTypeLinks.forEach(link => {
   
 });
 
+// DEPRECIATED FUNCTION! DO NOT USE!
 // Clear the localStorage when the window is about to be unloaded
-window.addEventListener('beforeunload', () => {
-  if (localStorage)
-    localStorage.clear();
-});
+// window.addEventListener('beforeunload', () => {
+//   // Check if the page is being closed, not refreshed
+//   if (performance.navigation.type === PerformanceNavigation.TYPE_NAVIGATE) {
+//     // Clear the localStorage
+//     localStorage.clear();
+//   }
+// });
+
 

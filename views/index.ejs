@@ -3,6 +3,10 @@
 
 <head>
     <!-- href="../server.js" -->
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> -->
+
     <script src="client.js" defer></script>
     <meta charset="UTF-8">
     <link rel="icon" href="/FabLabs.png" />
@@ -12,23 +16,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<div class="footer">
-    <div class="download">
-        <form action="#" class="button-bar" id="download-btn">
-            <button>
-                <i class="fa-solid fa-download" style="font-size: 18px;">
-                </i>
-            </button>
-            <span class="tooltip">Download Table</span>
-        </form>
-    </div>
-</div>  
 <div class="header">
     <img src="utdallas.png" alt="UTD logo">
     <h1>Tool Access Portal</h1>
     <div class="search">
         <form action="#" class="search-bar">
-            <input type="text" placeholder="Search Courses" name="search">
+            <input type="text" placeholder="    Search" name="search">
             <button>
                 <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;">
                 </i>
@@ -51,7 +44,12 @@
 
 <body>
     <div class="section">
-        <h2>Viewing All Machine Logins</h2>
+        <div class ="options-display">
+            <!-- for all log data: -->
+            <h2>Viewing All Log Data</h2>
+            <!-- for specific machine log data: -->
+            
+        </div>
         <div class="table-container">
             <table id="userTable">
                 <!-- <script>
@@ -73,7 +71,7 @@
                         <tr>
                             <td><%= user.userID %></td>
                             <!-- if userAdminstatus = 1, then say true, else false -->
-                            <td><%= user.AdminStatus == 1 ? 'Yes' : 'No' %></td>
+                            <td><%- user.AdminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No' %></td>
                             <td><%= user.MachineType %></td>
                             <td><%= user.Date.toLocaleDateString() %></td>
                             <td><%= user.StartTime %></td>
@@ -83,7 +81,9 @@
                 </tbody>
             </table>
         </div>    
-        
+        <header>
+            <a id="credits">Maximum Display: 50 rows</a>
+        </header>
     </div>
 
     <div class="sidebar close">
@@ -101,7 +101,7 @@
                         <i class="fa-solid fa-screwdriver-wrench"></i>
                         <span class="link_name">Machines</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
+                    <i class='fa-solid fa-angle-up arrow'></i>
                 </div>
                 <ul class="sub-menu" id="machine-list">
                     <li><a class="link_name" href="#">Machines </a></li>
@@ -123,7 +123,7 @@
                         <i class="fa-solid fa-business-time"></i>
                         <span class="link_name">Time</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
+                    <i class='fa-solid fa-angle-up arrow'></i>
                 </div>
                 <ul class="sub-menu">
                     <li><a class="link_name" href="#">Time</a></li>
@@ -531,6 +531,18 @@
                         </div>
                     </div>
                 </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa-solid fa-trash"></i>
+                    <span class="link_name" id="home_btn">Delete Machine</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="link_name" id="home_btn">Add Machine</span>
+                </a>
             </li>
         </ul>
 
