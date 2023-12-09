@@ -1,11 +1,8 @@
 {
   "dependencies": {
-    "datatables.net-dt": "^1.13.8",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "jquery": "^3.7.1",
     "mysql": "^2.18.1",
-    "paginationjs": "^2.6.0",
     "papaparse": "^5.4.1"
   }
 }
