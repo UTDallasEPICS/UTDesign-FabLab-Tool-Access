@@ -54,11 +54,11 @@ const updateTable = (data) => {
       const newRow = document.createElement('tr');
       newRow.innerHTML = `
           <td>${user.userID}</td>
-          <td>${user.AdminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No'}</td>
-          <td>${user.MachineType}</td>
-          <td>${new Date(user.Date).toLocaleDateString()}</td>
-          <td>${user.StartTime}</td>
-          <td>${user.EndTime}</td>
+          <td>${user.adminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No'}</td>
+          <td>${user.machineType}</td>
+          <td>${new Date(user.date).toLocaleDateString()}</td>
+          <td>${user.startTime}</td>
+          <td>${user.endTime}</td>
       `;
       tableBody.appendChild(newRow);
   });

@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 // Function to clear records older than 5 years
 const clearOldRecords = async () => {
   try {
-      const deleteQuery = `DELETE FROM ${table} WHERE Date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
+      const deleteQuery = `DELETE FROM ${table} WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
       const result = await pool.query(deleteQuery);
       if (result.affectedRows > 0)
           console.log('Old records deleted successfully.');
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
   const selectQuery = 
   `SELECT *
   FROM ${table}
-  ORDER BY Date DESC, logID DESC 
+  ORDER BY date DESC, logID DESC 
   LIMIT ${limit}`;
   const queryMachineList = `SELECT DISTINCT MachineType FROM ${table}`;
 
@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 
 //Go to home page
 app.get('/api/home', (req, res) => {
-  const selectQuery = `SELECT * FROM ${table} ORDER BY Date DESC, logID DESC LIMIT ${limit}`;
+  const selectQuery = `SELECT * FROM ${table} ORDER BY date DESC, logID DESC LIMIT ${limit}`;
 
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
@@ -88,7 +88,7 @@ app.get('/api/filterByMachineType', (req, res) => {
       return;
   }
   // console.log(`Machine ${machineType} clicked on the server!`);
-  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY Date DESC, logID DESC LIMIT ${limit}`;
+  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY date DESC, logID DESC LIMIT ${limit}`;
 
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {

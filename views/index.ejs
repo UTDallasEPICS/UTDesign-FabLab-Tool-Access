@@ -66,11 +66,11 @@
                         <tr>
                             <td><%= user.userID %></td>
                             <!-- if userAdminstatus = 1, then say true, else false -->
-                            <td><%- user.AdminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No' %></td>
-                            <td><%= user.MachineType %></td>
-                            <td><%= user.Date.toLocaleDateString() %></td>
-                            <td><%= user.StartTime %></td>
-                            <td><%= user.EndTime %></td>
+                            <td><%- user.adminStatus == 1 ? '<p style="color:#32CD32;">Yes</p>' : 'No' %></td>
+                            <td><%= user.machineType %></td>
+                            <td><%= user.date.toLocaleDateString() %></td>
+                            <td><%= user.startTime %></td>
+                            <td><%= user.endTime %></td>
                         </tr>
                     <% }); %>
                 </tbody>
