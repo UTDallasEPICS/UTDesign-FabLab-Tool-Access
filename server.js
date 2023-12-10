@@ -2,7 +2,9 @@ const fs = require('fs');
 const express = require('express'); // Import the ExpressJS framework
 const pool = require('./database.js');
 const papa = require('papaparse');
+
 var table = 'Fablab'; //MySQL table name
+var limit = 100; //Number of records to display in main page
 
 //Express.js connection:
 const hostname = "127.0.0.1";
@@ -21,7 +23,11 @@ app.set('view engine', 'ejs');
 
 //Display the log table in main page
 app.get('/', (req, res) => {
-  const selectQuery = `SELECT * FROM ${table} LIMIT 50`;
+  const selectQuery = 
+  `SELECT *
+  FROM ${table}
+  ORDER BY Date DESC, logID DESC 
+  LIMIT ${limit}`;
   const queryMachineList = `SELECT DISTINCT MachineType FROM ${table}`;
 
   pool.query(selectQuery, (err, results, fields) => {
@@ -40,8 +46,9 @@ app.get('/', (req, res) => {
 
       // Combine the data into a single object
       const templateData = {
-        results: results,
-        machines: machines,
+        results,
+        machines,
+        limit
       };
 
       // Render the template with the combined data
@@ -53,7 +60,7 @@ app.get('/', (req, res) => {
 
 //Go to home page
 app.get('/api/home', (req, res) => {
-  const selectQuery = `SELECT * FROM ${table} LIMIT 50`;
+  const selectQuery = `SELECT * FROM ${table} ORDER BY Date DESC, logID DESC LIMIT ${limit}`;
 
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
@@ -74,7 +81,7 @@ app.get('/api/filterByMachineType', (req, res) => {
       return;
   }
   // console.log(`Machine ${machineType} clicked on the server!`);
-  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}'`;
+  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY Date DESC, logID DESC LIMIT ${limit}`;
 
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
@@ -97,7 +104,9 @@ app.get('/api/filterByDate', (req, res) => {
   }
   //console.log(`Month ${month} and Day ${day} clicked on the server!`);
 
-  const selectQuery = `SELECT * FROM ${table} WHERE DATE = '${new Date().getFullYear()}-${month}-${day}'`;
+  const selectQuery = `SELECT * FROM ${table} WHERE 
+  DATE = '${new Date().getFullYear()}-${month}-${day}' ORDER BY logID DESC`;
+
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
       console.error(err.message);
@@ -153,13 +162,13 @@ app.get('/api/downloadCSV', (req, res) => {
   let selectQuery;
 
   if (machineType) {
-    selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}'`;
+    selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY Date DESC, logID DESC`;
   } else if (date) {
     const month = date.split('-')[1];
     const day = date.split('-')[2];
-    selectQuery = `SELECT * FROM ${table} WHERE DATE = '${new Date().getFullYear()}-${month}-${day}'`;
+    selectQuery = `SELECT * FROM ${table} WHERE DATE = '${new Date().getFullYear()}-${month}-${day}' ORDER BY logID DESC`;
   } else {
-    selectQuery = `SELECT * FROM ${table}`;
+    selectQuery = `SELECT * FROM ${table} ORDER BY Date DESC, logID DESC`;
   }
 
   pool.query(selectQuery, (err, results, fields) => {
@@ -168,6 +177,7 @@ app.get('/api/downloadCSV', (req, res) => {
       res.status(500).send('SQL Server Query Error.');
       return;
     }
+    console.log(results);
 
     //Using papaparse to convert query result to csv file
     const csv = papa.unparse(results);

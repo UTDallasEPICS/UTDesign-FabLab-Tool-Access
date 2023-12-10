@@ -19,6 +19,9 @@ const updateMachineList = (machines) => {
     machineLink.innerHTML = `<a href="#">${machine}</a>`;
     machineListContainer.appendChild(machineLink);
   });
+
+  // Reload the current page
+  location.reload();
 };
 
 const updateDisplayText = () => {
@@ -81,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             // Process the data
-            console.log('Filtered data:', data);
+            //console.log('Filtered data:', data);
             updateTable(data); // Update the table with the filtered data
             TableVisibility();
         })
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             // Process the data
-            console.log('Filtered data:', data);
+            //console.log('Filtered data:', data);
             updateTable(data); // Update the table with the filtered data
             TableVisibility();
         })
@@ -132,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(data => {
           // Process the data
-          console.log('Filtered data:', data);
+          //console.log('Filtered data:', data);
           updateTable(data); // Update the table with the filtered data
       })
       .catch(err => {
@@ -172,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
         // Process the data
-        console.log('Filtered data:', data);
+        //console.log('Filtered data:', data);
         updateTable(data); // Update the table with the filtered data
     })
     .catch(err => {
@@ -217,7 +220,7 @@ homeButton.addEventListener('click', () => {
     })
     .then(data => {
         // Process the data
-        console.log('All data:', data);
+        //console.log('All data:', data);
         updateTable(data); // Update the table with the filtered data
     })
     .catch(err => {
@@ -229,9 +232,9 @@ homeButton.addEventListener('click', () => {
   const downloadBtn = document.getElementById('download-btn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
-      console.log('Download button clicked on the client!');
+    console.log('Download button clicked on the client!');
 
-      // Check if machine type is stored in sessionStorage
+    // Check if machine type is stored in sessionStorage
     const storedMachineType = sessionStorage.getItem('selectedMachineType');
     // Check if date is stored in sessionStorage
     const storedDate = sessionStorage.getItem('selectedDate');
@@ -272,6 +275,7 @@ homeButton.addEventListener('click', () => {
         .catch(err => console.error('CSV Download Failed:', err.message));
     });
   }
+
   //Download button tooltip
   const downloadButton = document.getElementById('download-btn');
     const tooltip = downloadButton.querySelector('.tooltip');
@@ -330,7 +334,7 @@ homeButton.addEventListener('click', () => {
   
 });
 
-// DEPRECIATED FUNCTION! DO NOT USE!
+// DEPRECIATED FUNCTION! SessionStorage automatically clears session when window is closed.
 // Clear the localStorage when the window is about to be unloaded
 // window.addEventListener('beforeunload', () => {
 //   // Check if the page is being closed, not refreshed
