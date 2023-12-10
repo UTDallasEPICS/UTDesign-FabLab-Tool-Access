@@ -13,13 +13,20 @@ const port = 3000;
 
 app.set('view engine', 'ejs');
 
-//Connection to local mysql server:
-// const connection = mysql.createConnection({
-//   host: 'localhost',    
-//   user: 'pi', 
-//   password: 'pi', 
-//   database: 'testdb' //MySQL database name
-// });
+// Function to clear records older than 5 years
+const clearOldRecords = async () => {
+  try {
+      const deleteQuery = `DELETE FROM ${table} WHERE Date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
+      const result = await pool.query(deleteQuery);
+      if (result.affectedRows > 0)
+          console.log('Old records deleted successfully.');
+  } catch (error) {
+      console.error('Error deleting old records:', error.message);
+  }
+};
+
+// Call the function to clear old records
+clearOldRecords();
 
 //Display the log table in main page
 app.get('/', (req, res) => {
@@ -150,8 +157,6 @@ app.get('/api/deleteMachine', (req, res) => {
     }
   });
 });
-
-//Add machine type
 
 //Download CSV
 app.get('/api/downloadCSV', (req, res) => {

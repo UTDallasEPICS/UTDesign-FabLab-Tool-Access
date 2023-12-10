@@ -36,19 +36,4 @@ pool.getConnection((err, connection) => {
 // Promisify for Node.js async/await.
 pool.query = util.promisify(pool.query)
 
-// Function to clear records older than 5 years
-const clearOldRecords = async () => {
-    try {
-        const deleteQuery = 'DELETE FROM Fablab WHERE Date < DATE_SUB(NOW(), INTERVAL 5 YEAR)';
-        const result = await pool.query(deleteQuery);
-        if (result.affectedRows > 0)
-            console.log('Old records deleted successfully.');
-    } catch (error) {
-        console.error('Error deleting old records:', error.message);
-    }
-};
-
-  // Call the function to clear old records
-  clearOldRecords();
-
 module.exports = pool
