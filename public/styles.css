@@ -76,7 +76,7 @@ body {
 }
 
 .sidebar .nav-links li:hover {
-    background: #1d1b31;
+    background: rgb(30 24 46);
 }
 
 .sidebar .nav-links li .iocn-link {
@@ -131,7 +131,7 @@ body {
 .sidebar .nav-links li .sub-menu {
     padding: 6px 6px 14px 80px;
     margin-top: -10px;
-    background: #1d1b31;
+    background: #16151c;
     display: none;
 }
 
@@ -177,7 +177,7 @@ body {
     position: absolute;
     background-color: #f1f1f1;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 20%);
     z-index: 1;
     max-height: 200px;
     overflow-y: scroll;
@@ -391,16 +391,17 @@ h2 {
     z-index: 1;
 }
 .download button{
+    background: rgb(89 87 105);
     border:0;
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    background: #4659c3;
     cursor: pointer;
+    transition: background 0.5s ease;
 }
 
 .button-bar{
-    background: rgb(88, 87, 88);
+    background: rgb(89 87 105);
     display: flex;
     align-items: center;
     border-radius: 60px;
@@ -408,11 +409,12 @@ h2 {
     /* added by Aadesh below */
     position: fixed;
     cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+    box-shadow: 3px 3px 6px rgba(0,0,0,1);
     transition: background 0.5s ease;
 }
-.button-bar:hover {
-    background: rgb(64, 68, 197)
+.button-bar:hover,
+.button-bar:hover button {
+    background: rgb(15 178 45);
 }
 
 /* download btn tooltip added by Aadesh */
@@ -478,6 +480,7 @@ th {
 
 img {
     float: left;
+    padding-left: 10px;
     transform: translateY(40%);
 }
 

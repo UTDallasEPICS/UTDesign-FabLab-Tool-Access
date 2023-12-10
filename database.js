@@ -24,30 +24,16 @@ pool.getConnection((err, connection) => {
         }
         console.error('Database connection FAIL. \n', err)
     }
-    else {
-        console.log('Database connection SUCCESS.');
-    }
 
     //console.log(`Connected to MySQL server: ${database}`);
-    if (connection) connection.release()
-        return
+    if (connection) {
+        connection.release() 
+        console.log('Database connection SUCCESS.');
+        return;
+    }
 })
 
 // Promisify for Node.js async/await.
 pool.query = util.promisify(pool.query)
-
-// Function to clear records older than 5 years
-const clearOldRecords = async () => {
-    try {
-        const deleteQuery = 'DELETE FROM Fablab WHERE Date < DATE_SUB(NOW(), INTERVAL 5 YEAR)';
-        const result = await pool.query(deleteQuery);
-        console.log('Old records deleted successfully.');
-    } catch (error) {
-        console.error('Error deleting old records:', error.message);
-    }
-};
-
-  // Call the function to clear old records
-  clearOldRecords();
 
 module.exports = pool
