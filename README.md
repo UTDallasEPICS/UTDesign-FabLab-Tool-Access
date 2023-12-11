@@ -1,4 +1,17 @@
-# Get started
+## Website Overview
+
+The website neatly displays the time log of anyone who have successfully turned on a machine with their comet card. It was made for admins of the Fab-Lab to quickly view the usage of the machines and potentially narrow down issues. 
+
+#### Key features
+
+- Sort log by machine type
+- Sort log by month and day
+- Download desired log data as a CSV file
+- Deletion of machine if needed
+- Automatically updates machine list from database
+- Optimized connections using SQL pooling
+
+## Get started
 
 Clone main branch:
 `git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
