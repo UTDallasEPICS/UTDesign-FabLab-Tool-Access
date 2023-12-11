@@ -56,4 +56,4 @@ ______________________________________________
 
 For server side management (Node.js), highly recommend pm2:
 
-[https://pm2.keymetrics.io/docs/usage/signals-clean-restart/T](https://pm2.keymetrics.io/)
+https://pm2.keymetrics.io/docs/usage/quick-start/
