@@ -1,0 +1,12 @@
+[Unit]
+Description=Startup Script
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+#Change path accordingly to script location
+ExecStart=/bin/bash /home/pi/Desktop/startup_script.sh
+
+[Install]
+WantedBy=default.target
