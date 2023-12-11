@@ -19,7 +19,9 @@ The website neatly displays the time log of anyone who have successfully turned 
 
 - Node, express, mySQL
 
-### Get started
+_____
+
+## Get started
 
 Clone main branch:
 `git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
