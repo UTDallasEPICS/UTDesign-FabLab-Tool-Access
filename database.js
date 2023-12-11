@@ -1,15 +1,12 @@
 var mysql = require('mysql');
 var util = require('util');
 
-//Set name of the database
-pool.databaseName = 'fablab';
-
 var pool = mysql.createPool({
     connectionLimit: 10,
-    host: 'localhost',    
-    user: 'root', 
-    password: 'root', 
-    database: `${pool.databaseName}`, 
+    host: 'sql3.freesqldatabase.com',    
+    user: 'sql3667697', 
+    password: '1dmeYAZjPr', 
+    database: 'sql3667697', 
     timezone: '-06:00' //set CST 
 });
 

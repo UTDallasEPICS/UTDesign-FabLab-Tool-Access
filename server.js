@@ -3,7 +3,7 @@ const express = require('express'); // Import the ExpressJS framework
 const pool = require('./database.js');
 const papa = require('papaparse');
 
-let table = ''; //MySQL table name
+let table = 'timelog'; //MySQL table name
 var limit = 100; //Number of records to display in main page
 
 //Express.js connection:
@@ -11,47 +11,21 @@ const hostname = "127.0.0.1";
 const app = express();
 const port = 3000;
 
-//Get table name from database
-function getTableName(callback) {
-  const selectQuery = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='${pool.databaseName}'`;
-  pool.query(selectQuery, (err, result) => {
-    if (err) {
-      console.error('Error getting table name:', err.message);
-      return callback(err);
-    }
-    if (result.length > 0) {
-      table = result[0].TABLE_NAME;
-      console.log(`Table name: ${table}`);
-    }
-    callback(null, table);
-  });
-}
-
 // Function to clear records older than 5 years
 async function clearOldRecords() {
   try {
-    if (!err) {
       const deleteQuery = `DELETE FROM ${table} WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
       pool.query(deleteQuery, (error, result) => {
-        if (error) {
-          console.error('Error deleting old records:', error.message);
-        } else (result.affectedRows > 0); {
+        if (result.affectedRows > 0); {
           console.log('Old records deleted successfully.');
         }
       });
-    }
   } catch (error) {
     console.error('Error deleting old records:', error.message);
   }
 }
 
-getTableName((err, tableName) => {
-  if (!err) {
-    table = tableName;
-    console.log('Table: ', table);
-    clearOldRecords();
-  }
-});
+clearOldRecords();
 
 app.set('view engine', 'ejs');
 
