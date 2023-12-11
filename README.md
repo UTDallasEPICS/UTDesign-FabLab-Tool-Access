@@ -17,12 +17,15 @@ To start website:
 ### Setup FabFivePi.py to auto start in Pi
 
 Creating a new startup script
-`bash
-nano startup_script.sh
-`
-`bash
-chmod +x /path/startup_script.sh`
-`
+
+`nano startup_script.sh`
+
+
+Make the script executable
+
+
+`chmod +x /path/startup_script.sh`
+
 
 Make the script run from bootup using systemd
 ```bash
