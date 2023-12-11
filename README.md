@@ -6,7 +6,7 @@ This project creates an access system for the operation of power tools in FabLab
 
 The website neatly displays the time log of anyone who have successfully turned on a machine with their comet card. It was primarily made for Tim to quickly view the usage of the machines and potentially narrow down issues. 
 
-#### Key features
+### Key features
 
 - Sort log data by machine type
 - Sort log data by month and day
@@ -14,6 +14,10 @@ The website neatly displays the time log of anyone who have successfully turned 
 - Deletion of machine if needed
 - Automatically updates machine list from database
 - Optimized connections using SQL pooling
+
+### Frameworks
+
+- Node, express, mySQL
 
 ### Get started
 
