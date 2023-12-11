@@ -15,9 +15,9 @@ To start website:
 
 ___________________________________________
 
-### Setup FabFivePi.py to auto start in Pi
+### Setup FabFivePi.py to auto start in Pi (Optional)
 
-Creating a new startup script
+Create a new startup script (or use the one provided)
 
 `nano startup_script.sh`
 
