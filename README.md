@@ -54,10 +54,3 @@ To test:
 sudo systemctl start startup_script.service
 sudo systemctl status startup_script.service
 ```
-
-sudo systemctl daemon-reload
-To test:
-sudo systemctl start startup_script.service
-sudo systemctl status startup_script.service
-```
-
