@@ -16,19 +16,13 @@ To start website:
 
 ### Setup FabFivePi.py to auto start in Pi
 
-Start by creating a new startup script
-```bash
+Creating a new startup script
+`bash
 nano startup_script.sh
-```
-```bash
-#!/bin/bash
-sleep 30 # wait for desktop to load
-cd /home/pi/Desktop
-lxterminal -e python3 script.py > /home/pi/Desktop/script_log.txt 2>&1
-```
-```bash
+`
+`bash
 chmod +x /path/startup_script.sh`
-```
+`
 
 Make the script run from bootup using systemd
 ```bash
