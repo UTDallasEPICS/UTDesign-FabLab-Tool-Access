@@ -84,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             // Process the data
-            //console.log('Filtered data:', data);
             updateTable(data); // Update the table with the filtered data
             TableVisibility();
         })
@@ -106,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             // Process the data
-            //console.log('Filtered data:', data);
             updateTable(data); // Update the table with the filtered data
             TableVisibility();
         })
@@ -135,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(data => {
           // Process the data
-          //console.log('Filtered data:', data);
           updateTable(data); // Update the table with the filtered data
       })
       .catch(err => {
@@ -153,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Call the handleTimeClick function with the selected month and day
       handleDateClick(month, day);
-      console.log(`Date: ${month} ${day} link clicked on the client!`);
     });
   });
 
@@ -175,64 +171,59 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
         // Process the data
-        //console.log('Filtered data:', data);
         updateTable(data); // Update the table with the filtered data
     })
     .catch(err => {
         console.error('Error fetching filtered data:', err.message);
     });
-};
+  };
 
-// Get all machine type links
-const machineTypeLinks = document.querySelectorAll('#machine-list li a');
+  // Get all machine type links
+  const machineTypeLinks = document.querySelectorAll('#machine-list li a');
 
-// Add click event listener to each machine type link
-machineTypeLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-      if (link.innerText === 'Machines' || link.innerText === 'Time') {
-        return; // Exit the event listener early
-    }
-        event.preventDefault();
-        const machineType = link.textContent.trim(); // Extract machine type from link text
-        handleMachineTypeClick(machineType);
-        console.log(`Machine ${machineType} link clicked on the client!`);
-    });
-});
+  // Add click event listener to each machine type link
+  machineTypeLinks.forEach(link => {
+      link.addEventListener('click', (event) => {
+        if (link.innerText === 'Machines' || link.innerText === 'Time') {
+          return; // Exit the event listener early
+      }
+          event.preventDefault();
+          const machineType = link.textContent.trim(); // Extract machine type from link text
+          handleMachineTypeClick(machineType);
+      });
+  });
 
-// -------------------------
+  // -------------------------
 
-//Get home button to display all data
-const homeButton = document.querySelector('#home_btn');
-homeButton.addEventListener('click', () => {
+  //Get home button to display all data
+  const homeButton = document.querySelector('#home_btn');
+  homeButton.addEventListener('click', () => {
 
-  // Clear local storage
-  sessionStorage.removeItem('selectedMachineType');
-  sessionStorage.removeItem('selectedDate');
+    // Clear local storage
+    sessionStorage.removeItem('selectedMachineType');
+    sessionStorage.removeItem('selectedDate');
 
-  console.log('Home button clicked on the client!');
-  // Make an HTTP request to the server to get all data
-  fetch('/api/home')
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`Error ${res.status}: ${res.statusText}`);
-        }
-        return res.json();
-    })
-    .then(data => {
-        // Process the data
-        //console.log('All data:', data);
-        updateTable(data); // Update the table with the filtered data
-    })
-    .catch(err => {
-        console.error('Error fetching all data:', err.message);
-    });
+    // Make an HTTP request to the server to get all data
+    fetch('/api/home')
+      .then(res => {
+          if (!res.ok) {
+              throw new Error(`Error ${res.status}: ${res.statusText}`);
+          }
+          return res.json();
+      })
+      .then(data => {
+          // Process the data
+          updateTable(data); // Update the table with the filtered data
+      })
+      .catch(err => {
+          console.error('Error fetching all data:', err.message);
+      });
   });
 
   //Detect if download button is clicked
   const downloadBtn = document.getElementById('download-btn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
-    console.log('Download button clicked on the client!');
 
     // Check if machine type is stored in sessionStorage
     const storedMachineType = sessionStorage.getItem('selectedMachineType');
@@ -295,7 +286,6 @@ homeButton.addEventListener('click', () => {
   //Delete existing Machine
   const deleteButton = document.querySelector('#delete-machine-btn');
   deleteButton.addEventListener('click', async () => {
-    console.log('Delete button clicked on the client!');
 
     const machineName = prompt('Enter the machine type to delete:');
     if (machineName) {
@@ -322,7 +312,6 @@ homeButton.addEventListener('click', () => {
   //Add new machine //W.I.P
   const addButton = document.querySelector('#add-machine-btn');
   addButton.addEventListener('click', async () => {
-    console.log('Add button clicked on the client!');
     alert('⚠ This feature is not yet implemented')
   });
 

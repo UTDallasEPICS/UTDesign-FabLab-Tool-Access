@@ -3,7 +3,7 @@ const express = require('express'); // Import the ExpressJS framework
 const pool = require('./database.js');
 const papa = require('papaparse');
 
-var table = 'Fablab'; //MySQL table name
+let table = ''; //MySQL table name
 var limit = 100; //Number of records to display in main page
 
 //Express.js connection:
@@ -11,25 +11,52 @@ const hostname = "127.0.0.1";
 const app = express();
 const port = 3000;
 
-app.set('view engine', 'ejs');
+//Get table name from database
+function getTableName(callback) {
+  const selectQuery = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='${pool.databaseName}'`;
+  pool.query(selectQuery, (err, result) => {
+    if (err) {
+      console.error('Error getting table name:', err.message);
+      return callback(err);
+    }
+    if (result.length > 0) {
+      table = result[0].TABLE_NAME;
+      console.log(`Table name: ${table}`);
+    }
+    callback(null, table);
+  });
+}
 
 // Function to clear records older than 5 years
-const clearOldRecords = async () => {
+async function clearOldRecords() {
   try {
+    if (!err) {
       const deleteQuery = `DELETE FROM ${table} WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
-      const result = await pool.query(deleteQuery);
-      if (result.affectedRows > 0)
+      pool.query(deleteQuery, (error, result) => {
+        if (error) {
+          console.error('Error deleting old records:', error.message);
+        } else (result.affectedRows > 0); {
           console.log('Old records deleted successfully.');
+        }
+      });
+    }
   } catch (error) {
-      console.error('Error deleting old records:', error.message);
+    console.error('Error deleting old records:', error.message);
   }
-};
+}
 
-// Call the function to clear old records
-clearOldRecords();
+getTableName((err, tableName) => {
+  if (!err) {
+    table = tableName;
+    console.log('Table: ', table);
+    clearOldRecords();
+  }
+});
+
+app.set('view engine', 'ejs');
 
 //Display the log table in main page
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {  
   const selectQuery = 
   `SELECT *
   FROM ${table}
@@ -87,9 +114,8 @@ app.get('/api/filterByMachineType', (req, res) => {
       res.status(400).send('Missing required query parameter: machineType');
       return;
   }
-  // console.log(`Machine ${machineType} clicked on the server!`);
-  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY date DESC, logID DESC LIMIT ${limit}`;
 
+  const selectQuery = `SELECT * FROM ${table} WHERE MachineType='${machineType}' ORDER BY date DESC, logID DESC LIMIT ${limit}`;
   pool.query(selectQuery, (err, results, fields) => {
     if (err) {
       console.error(err.message);
@@ -109,7 +135,6 @@ app.get('/api/filterByDate', (req, res) => {
       res.status(400).send('Missing required query parameter: month or day');
       return;
   }
-  //console.log(`Month ${month} and Day ${day} clicked on the server!`);
 
   const selectQuery = `SELECT * FROM ${table} WHERE 
   DATE = '${new Date().getFullYear()}-${month}-${day}' ORDER BY logID DESC`;
@@ -160,7 +185,6 @@ app.get('/api/deleteMachine', (req, res) => {
 
 //Download CSV
 app.get('/api/downloadCSV', (req, res) => {
-  console.log('Download CSV clicked on the server!');
   const machineType = req.query.machineType;
   const date = req.query.date;
 
@@ -182,7 +206,6 @@ app.get('/api/downloadCSV', (req, res) => {
       res.status(500).send('SQL Server Query Error.');
       return;
     }
-    console.log(results);
 
     //Using papaparse to convert query result to csv file
     const csv = papa.unparse(results);
