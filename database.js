@@ -3,10 +3,10 @@ var util = require('util');
 
 var pool = mysql.createPool({
     connectionLimit: 10,
-    host: 'sql3.freesqldatabase.com',    
-    user: 'sql3667697', 
-    password: '1dmeYAZjPr', 
-    database: 'sql3667697', 
+    host: 'localhost',    
+    user: 'root', 
+    password: 'root', 
+    database: 'fablab', 
     timezone: '-06:00' //set CST 
 });
 
