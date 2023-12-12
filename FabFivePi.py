@@ -1,12 +1,20 @@
 #!usr/bin/env python3
 # FabFive Software, Version: FabFivePi V10
 # Author: Ammar Mohammed
+'''
+The time, csv, and socket packages are bundled with the Python Programming Language.
+The RPi.GPIO package is bundled with Raspberry Pi's Operating System.
+
+INSTALL:
+pip install RPLCD
+RPLCD Documentation: https://rplcd.readthedocs.io/en/stable/index.html
+RPLCD Screen Wiring: https://rplcd.readthedocs.io/en/stable/getting_started.html#wiring
+- Remember to enable I2C in the sudo raspi-config settings, otherwise the program will not function.
+'''
 import time
 import csv
 import RPi.GPIO as GPIO
 from RPLCD.i2c import CharLCD
-import json
-# import mysql.connector
 import socket
 
 loop = True
@@ -231,7 +239,6 @@ def timer(user_type):
 
             # Timer escape feature
             if GPIO.input(button2) == 0:
-                # print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
@@ -263,7 +270,6 @@ def timer(user_type):
             # Timer escape feature
             if GPIO.input(button2) == 0:
                 admin_use_machine = False
-                print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
@@ -327,25 +333,6 @@ def send_data(data):
         lcd.write_string('unavailable')
         time.sleep(5)
 
-'''Developed for 16x2 LCD
-Starts printing string at last digit panel on screen,
-then carries the text forward
-'''
-
-
-def scroll_text(long_text, line_number):
-    length_text = len(long_text)
-    for i in range(length_text):
-        if (15 - i) > -1:
-            lcd.cursor_pos = (line_number, (15 - i))
-            lcd.write_string(long_text)
-        else:
-            lcd.cursor_pos = (line_number, 0)
-            lcd.write_string(long_text[abs(15 - i):length_text])
-        time.sleep(0.25)
-    time.sleep(1)
-    lcd.clear()
-
 
 # This while loop is the main loop
 while loop:
@@ -369,7 +356,6 @@ while loop:
 
         print('Created file')
 
-    card_data = json.dumps(card_numbers)  # converts list of card numbers to JSON
     lcd.clear()
 
     boot_up()  # just prints text on screens
