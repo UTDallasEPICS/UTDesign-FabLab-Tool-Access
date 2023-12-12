@@ -26,7 +26,7 @@ _____
 Clone main branch:
 `git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
 
-###Setup server:
+### Setup server:
 
 Install Node (using nvm):
 
