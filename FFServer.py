@@ -2,7 +2,7 @@ import socket
 import mysql.connector
 bufferSize = 1024
 ServerPort = 2222
-ServerIP = '192.168.254.38'
+ServerIP = '10.42.0.1'  # IP address of server Pi when connected to FabFive Wifi-Hotspot, password to hotspot, fabfive1
 
 msgFromServer = "Thanks! Server received timelog data."
 bytesToSend = msgFromServer.encode('utf-8')
