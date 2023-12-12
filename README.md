@@ -24,15 +24,23 @@ _____
 # Get started
 
 Clone main branch:
-`git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
+```
+git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git
+```
 
 ### Setup server:
 
 Install Node (using nvm):
 
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
+```
 nvm install node
+```
+To start web server:
+```
+node server.js
 ```
 
 If the database & server is not locally hosted:
@@ -41,14 +49,13 @@ If the database & server is not locally hosted:
 2. Change the IP address to bind:
   - In server.js: `const hostname = "<IP address>";`
   - In FFServer.py: `ServerIP = '<IP address>'`
-  - In FabFivePi.py: `server_address = ('<IP address', 2222)`
+  - In FabFivePi.py: `server_address = ('<IP address>', 2222)`
 
+Make sure to also run 
 
-
-To start website:
-`node server.js`
-
-Make sure to also run `python3 FFServer.py`
+```
+python3 FFServer.py
+```
 
 ___________________________________________
 
@@ -56,12 +63,15 @@ ___________________________________________
 
 Create a new startup script (or use the one provided)
 
-`nano /home/pi/Desktop/startup_script.sh`
+```bash
+nano /home/pi/Desktop/startup_script.sh
+```
 
 Make the script executable
 
-
-`chmod +x /path/startup_script.sh`
+```bash
+chmod +x /path/startup_script.sh
+```
 
 
 Make the script run from bootup using systemd
