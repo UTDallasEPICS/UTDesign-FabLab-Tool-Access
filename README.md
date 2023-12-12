@@ -21,10 +21,12 @@ The website neatly displays the time log of anyone who have successfully turned 
 
 _____
 
-## Get started
+# Get started
 
 Clone main branch:
 `git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
+
+###Setup server:
 
 Install Node (using nvm):
 
@@ -33,8 +35,20 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 nvm install node
 ```
 
+If the database & server is not locally hosted:
+
+1. Configure mySQL connection in `database.js` & `FFServer.py`
+2. Change the IP address to bind:
+  - In server.js: `const hostname = "<IP address>";`
+  - In FFServer.py: `ServerIP = '<IP address>'`
+  - In FabFivePi.py: `server_address = ('<IP address', 2222)`
+
+
+
 To start website:
 `node server.js`
+
+Make sure to also run `python3 FFServer.py`
 
 ___________________________________________
 
