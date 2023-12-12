@@ -41,7 +41,7 @@ If the database & server is not locally hosted:
 2. Change the IP address to bind:
   - In server.js: `const hostname = "<IP address>";`
   - In FFServer.py: `ServerIP = '<IP address>'`
-  - In FabFivePi.py: `server_address = ('<IP address', 2222)`
+  - In FabFivePi.py: `server_address = ('<IP address>', 2222)`
 
 
 
