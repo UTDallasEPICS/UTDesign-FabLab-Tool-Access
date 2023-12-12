@@ -42,6 +42,7 @@ To start web server:
 ```
 node server.js
 ```
+Go to `http://127.0.0.1:3000/` to view the website
 
 If the database & server is not locally hosted:
 
