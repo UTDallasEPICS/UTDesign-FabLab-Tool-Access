@@ -13,16 +13,16 @@ const port = 3000;
 
 // Function to clear records older than 5 years
 async function clearOldRecords() {
-  try {
-      const deleteQuery = `DELETE FROM ${table} WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
-      pool.query(deleteQuery, (error, result) => {
-        if (result.affectedRows > 0); {
-          console.log('Old records deleted successfully.');
-        }
-      });
-  } catch (error) {
-    console.error('Error deleting old records:', error.message);
-  }
+  const deleteQuery = `DELETE FROM ${table} WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)`;
+  pool.query(deleteQuery, (error, results) => {
+    if (error) {
+      console.error('Error deleting old records:', error.message);
+      return;
+    } 
+    if (results.affectedRows > 0); {
+      console.log('Old records deleted successfully.');
+    }
+  });
 }
 
 clearOldRecords();

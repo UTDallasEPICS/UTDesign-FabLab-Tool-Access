@@ -21,20 +21,42 @@ The website neatly displays the time log of anyone who have successfully turned 
 
 _____
 
-## Get started
+# Get started
 
 Clone main branch:
-`git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git`
+```
+git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git
+```
+
+### Setup server:
 
 Install Node (using nvm):
 
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash 
+```
 nvm install node
 ```
+To start web server:
+```
+node server.js
+```
+Go to `http://127.0.0.1:3000/` to view the website
 
-To start website:
-`node server.js`
+If the database & server is not locally hosted:
+
+1. Configure mySQL connection in `database.js` & `FFServer.py`
+2. Change the IP address to bind:
+  - In server.js: `const hostname = "<IP address>";`
+  - In FFServer.py: `ServerIP = '<IP address>'`
+  - In FabFivePi.py: `server_address = ('<IP address>', 2222)`
+
+Make sure to also run the python server module
+
+```
+python3 FFServer.py
+```
 
 ___________________________________________
 
@@ -42,13 +64,15 @@ ___________________________________________
 
 Create a new startup script (or use the one provided)
 
-`nano startup_script.sh`
-
+```bash
+nano /home/pi/Desktop/startup_script.sh
+```
 
 Make the script executable
 
-
-`chmod +x /path/startup_script.sh`
+```bash
+chmod +x /path/startup_script.sh
+```
 
 
 Make the script run from bootup using systemd
@@ -75,8 +99,25 @@ To test:
 sudo systemctl start startup_script.service
 sudo systemctl status startup_script.service
 ```
+
 ______________________________________________
 
 For server side management (Node.js), highly recommend pm2:
 
 https://pm2.keymetrics.io/docs/usage/quick-start/
+
+__________________________________________
+
+### Issues?
+
+#### ModuleNotFound: RPLCD
+
+Try installing the library globally
+
+```
+git clone https://github.com/dbrgn/RPLCD.git
+```
+Once in the cloned directory:
+```
+sudo python setup.py install
+```
