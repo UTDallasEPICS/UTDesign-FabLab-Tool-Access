@@ -98,8 +98,25 @@ To test:
 sudo systemctl start startup_script.service
 sudo systemctl status startup_script.service
 ```
+
 ______________________________________________
 
 For server side management (Node.js), highly recommend pm2:
 
 https://pm2.keymetrics.io/docs/usage/quick-start/
+
+__________________________________________
+
+### Issues?
+
+#### ModuleNotFound: RPLCD
+
+Try installing the library globally
+
+```
+git clone https://github.com/dbrgn/RPLCD.git
+```
+Once in the cloned directory:
+```
+sudo python setup.py install
+```
