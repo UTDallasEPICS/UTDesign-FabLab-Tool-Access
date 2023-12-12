@@ -42,7 +42,7 @@ ___________________________________________
 
 Create a new startup script (or use the one provided)
 
-`nano startup_script.sh`
+`nano /home/pi/Desktop/startup_script.sh`
 
 
 Make the script executable
