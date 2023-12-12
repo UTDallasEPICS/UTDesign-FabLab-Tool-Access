@@ -1,16 +1,21 @@
-# FabFive Software, Version: FabFivePi V9
-"""
-FabFivePi V9.0
-- Removed socket server connection
-- Fixed lcd.cursor_pos to follow row, column format: made mistake of col, row
-"""
+#!usr/bin/env python3
+# FabFive Software, Version: FabFivePi V10
 # Author: Ammar Mohammed
+'''
+The time, csv, and socket packages are bundled with the Python Programming Language.
+The RPi.GPIO package is bundled with Raspberry Pi's Operating System.
+
+INSTALL:
+pip install RPLCD
+RPLCD Documentation: https://rplcd.readthedocs.io/en/stable/index.html
+RPLCD Screen Wiring: https://rplcd.readthedocs.io/en/stable/getting_started.html#wiring
+- Remember to enable I2C in the sudo raspi-config settings, otherwise the program will not function.
+'''
 import time
 import csv
 import RPi.GPIO as GPIO
 from RPLCD.i2c import CharLCD
-import json
-# import mysql.connector
+import socket
 
 loop = True
 
@@ -28,8 +33,9 @@ lcd = CharLCD('PCF8574', 0x27)
 
 card_numbers = {}
 
-minutes = 5
-seconds_per_minute = 60  # DEV CODE temporary number
+machine_name = 'Bandsaw 1'
+minutes = 5  # change this to manipulate time
+seconds_per_minute = 1
 
 
 class CardUser:
@@ -42,9 +48,9 @@ class CardUser:
 
 # This function will display "start-up" screen for our device
 def boot_up():
-    print('MACHINE ONE')  # Dev code
+    print(machine_name)  # Dev code
     lcd.cursor_pos = (0, 0)
-    lcd.write_string('MACHINE ONE')
+    lcd.write_string(machine_name)
     time.sleep(1)
 
     print('Please scan card')  # Dev code
@@ -56,12 +62,16 @@ def boot_up():
 # Function displays a menu in which admins can either add or remove users
 def admin_menu():
     button_response = True
-
+    
+    print('MENU > MANAGE USERS')
     print('1. Add user?')
-    print('2. Remove user?')
+    print('2. Remove user?\n')
+    
     lcd.cursor_pos = (0, 0)
-    lcd.write_string('1. Add user?')
+    lcd.write_string('MENU > MANAGE USERS')
     lcd.cursor_pos = (1, 0)
+    lcd.write_string('1. Add user?')
+    lcd.cursor_pos = (2, 0)
     lcd.write_string('2. Remove user?')
 
     while button_response:
@@ -77,13 +87,13 @@ def admin_menu():
             print('ADD USER')
             print('Please scan card')
             lcd.cursor_pos = (0, 0)
-            lcd.write_string('ADD USER')
+            lcd.write_string('MENU >> ADD USER')
             lcd.cursor_pos = (1, 0)
             lcd.write_string('Scan card to add')
 
             user_add = input()
             if not check_user_in_list(user_add):
-                print('Set user as admin?')
+                print('\nSet user as admin?')
                 lcd.clear()
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('Set user as admin?')
@@ -129,7 +139,7 @@ def admin_menu():
             print('Please scan card')
             lcd.clear()
             lcd.cursor_pos = (0, 0)
-            lcd.write_string('REMOVE USER')
+            lcd.write_string('MENU >> REMOVE USER')
             lcd.cursor_pos = (1, 0)
             lcd.write_string('Please scan card')
 
@@ -148,7 +158,7 @@ def check_user_in_list(user):
         lcd.write_string('system!!!')
         time.sleep(3)
 
-        print('Add process cancelled')
+        print('Add process cancelled\n')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('Add user process')
@@ -169,7 +179,7 @@ def add_user(user, is_admin):
             csv_writer.writerow([user] + [is_admin])
             card_numbers.update({user: is_admin})
 
-        print({True: 'User set to admin!', False: 'User set to default!'}[is_admin])
+        print({True: 'User set to admin!\n', False: 'User set to default!\n'}[is_admin])
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('New user added')
@@ -183,7 +193,7 @@ def remove_user(user):
     if user in card_numbers:
         card_numbers.pop(user)
 
-        print('User removed')
+        print('User removed\n')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('User now removed')
@@ -198,7 +208,7 @@ def remove_user(user):
     # if user was not in the user list
     else:
         print('user not found in list')
-        print('removal process cancelled')
+        print('removal process cancelled\n')
         lcd.clear()
         lcd.cursor_pos = (0, 0)
         lcd.write_string('User not in list!')
@@ -215,7 +225,7 @@ def timer(user_type):
 
     get_time = time.localtime()
     start_time = time.strftime("%H:%M:%S", get_time)
-    print(start_time)
+    print('Session started at: ' + start_time)
 
     if user_type == 'default':
         default_timer = minutes * seconds_per_minute
@@ -229,7 +239,6 @@ def timer(user_type):
 
             # Timer escape feature
             if GPIO.input(button2) == 0:
-                # print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
@@ -238,19 +247,14 @@ def timer(user_type):
             default_timer -= 1
             default_time_spent += 1
             lcd.clear()
-        print('Total time spent: ' + str(default_time_spent))
+        print('Total time spent: ' + str(default_time_spent) + '\n')
 
         get_time = time.localtime()
         stop_time = time.strftime("%H:%M:%S", get_time)
-        print(stop_time)
+        print('Session ended at: ' + stop_time + '\n')
 
-        session_usage = f'{current_user.number}, {default_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
-        print(session_usage)
-        session_data = json.dumps(session_usage)
-        # send_data(session_data)
-        '''
-        
-        '''
+        session_usage = f'{current_user.number}, 0, "{machine_name}", CURRENT_DATE(), "{start_time}", "{stop_time}"'  # stores data of how long user used machine
+        send_data(session_usage)
 
     elif user_type == 'admin':
         admin_time_spent = 0
@@ -266,7 +270,6 @@ def timer(user_type):
             # Timer escape feature
             if GPIO.input(button2) == 0:
                 admin_use_machine = False
-                print('Exited timer')
                 lcd.cursor_pos = (0, 0)
                 lcd.write_string('EXIT TIMER...')
                 time.sleep(1)
@@ -278,16 +281,13 @@ def timer(user_type):
 
         get_time = time.localtime()
         stop_time = time.strftime("%H:%M:%S", get_time)
-        print(stop_time)
+        print('Session ended at: ' + stop_time + '\n')
 
-        session_usage = f'{current_user.number}, {admin_time_spent}, {start_time}, {stop_time}'  # stores data of how long user used machine
-        print(session_usage)
-        session_data = json.dumps(session_usage)
-        # send_data(session_data)
+        session_usage = f'{current_user.number}, 1, "{machine_name}", CURRENT_DATE(), "{start_time}", "{stop_time}"'  # stores data of how long user used machine
+        send_data(session_usage)
 
     GPIO.output(machine_pin, False)  # turn off machine
 
-    print('Finished timer')
     lcd.clear()
     lcd.cursor_pos = (0, 0)
     lcd.write_string('Timer finished!')
@@ -295,38 +295,44 @@ def timer(user_type):
     lcd.clear()
 
 
-'''Developed for 16x2 LCD
-Starts printing string at last digit panel on screen,
-then carries the text forward
-'''
+def send_data(data):
+    print('Session info: ' + data)
 
-
-def scroll_text(long_text, line_number):
-    length_text = len(long_text)
-    for i in range(length_text):
-        if (15 - i) > -1:
-            lcd.cursor_pos = (line_number, (15 - i))
-            lcd.write_string(long_text)
-        else:
-            lcd.cursor_pos = (line_number, 0)
-            lcd.write_string(long_text[abs(15 - i):length_text])
-        time.sleep(0.25)
-    time.sleep(1)
+    print('\nConnecting to server...')
     lcd.clear()
+    lcd.cursor_pos = (0, 0)
+    lcd.write_string('Connecting to')
+    lcd.cursor_pos = (1, 0)
+    lcd.write_string('server...')
+    time.sleep(1)
 
+    bytes_to_send = data.encode('utf-8')
+    server_address = ('10.42.0.1', 2222) #10.159.150.164 utdiot
+    buffer_size = 1024
+    udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_client.settimeout(10)  # testing 20 second unresponsive
+    try:
+        udp_client.sendto(bytes_to_send, server_address)
 
-# mysql code
-'''
-db = mysql.connector.connect(
-    host="",
-    user="FabFive",
-    passwd="FabFive",
-    database="Fablab"
-)
+        response, address = udp_client.recvfrom(buffer_size)
+        response = response.decode('utf-8')
+        print('Response from Server', response)
+        print('Server IP Address: ', address[0])
+        print('Server Port: ' + str(address[1]) + '\n')
 
-my_cursor = db.cursor()
-my_cursor.execute("INSERT INTO Fablab (userID, time_spent, start, stop) VALUES()")
-'''
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('Reached server!')
+        time.sleep(1)
+    except socket.timeout:
+        print('ERROR: Cannot reach server\n')
+        lcd.clear()
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string('ERROR: Server')
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('unavailable')
+        time.sleep(5)
+
 
 # This while loop is the main loop
 while loop:
@@ -350,7 +356,6 @@ while loop:
 
         print('Created file')
 
-    card_data = json.dumps(card_numbers)  # converts list of card numbers to JSON
     lcd.clear()
 
     boot_up()  # just prints text on screens
@@ -366,12 +371,12 @@ while loop:
     # If user is default, accept, turn on machine and timer
     if current_user.number in card_numbers:
         lcd.cursor_pos = (0, 0)
-        print('User recognized')
+        print('\nUser recognized')
         lcd.write_string('User recognized')
         time.sleep(1)
 
         lcd.cursor_pos = (1, 0)
-        print('Welcome back')
+        print('Welcome back\n')
         lcd.write_string('Welcome back')
         time.sleep(2)
         lcd.clear()
@@ -386,24 +391,29 @@ while loop:
         lcd.write_string('User not found')
         time.sleep(1)
 
-        print('To join the system, call admin for assistance')
+        print('To join the system, call admin for assistance\n')
         lcd.cursor_pos = (1, 0)
         lcd.write_string('To join the system,')
         lcd.cursor_pos = (2, 0)
         lcd.write_string('call admin for')
         lcd.cursor_pos = (3, 0)
         lcd.write_string('assistance')
+        time.sleep(4);
     # if user is found
     else:
         # If admin scans launch admin menu (function)
         if current_user.is_admin:
-            print('Access admin menu or use machine?')
+            print('MENU: ADMIN')
+            print('1. Add/Remove User')
+            print('2. Start Machine\n')
             button_response = True
 
             lcd.clear()
             lcd.cursor_pos = (0, 0)
-            lcd.write_string('1. Admin Menu')
+            lcd.write_string('MENU: ADMIN')
             lcd.cursor_pos = (1, 0)
+            lcd.write_string('1. Add/Remove Users')
+            lcd.cursor_pos = (2, 0)
             lcd.write_string('2. Use Machine')
 
             while button_response:
