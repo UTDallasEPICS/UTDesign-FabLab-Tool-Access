@@ -60,6 +60,7 @@ To start web server:
 ```
 node server.js
 ```
+Go to `http://127.0.0.1:3000/` to view the website
 
 If the database & server is not locally hosted:
 
@@ -69,7 +70,7 @@ If the database & server is not locally hosted:
   - In FFServer.py: `ServerIP = '<IP address>'`
   - In FabFivePi.py: `server_address = ('<IP address>', 2222)`
 
-Make sure to also run 
+Make sure to also run the python server module
 
 ```
 python3 FFServer.py
