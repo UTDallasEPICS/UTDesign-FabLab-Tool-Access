@@ -23,10 +23,28 @@ _____
 
 # Get started
 
-Clone main branch:
+> *Note: This guide assumes that you are cloning the repo into `home/pi/Desktop/` for raspberry pi.
+
+Clone main branch (into home/pi/Desktop for Pi):
 ```
 git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git
 ```
+
+### Setup Access System:
+
+All files under /Raspberry_Pi. (Other dirctories can be deleted)
+
+We'll be using xterm for our terminal output (used in startup_script.sh). You can use any terminal that supports detached terminal `-e` such as lxterminal.
+
+```bash
+sudo apt install xterm
+```
+
+Run the `FabFivePi.py` program and you should be done.
+
+Check out [here](#https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
+
+
 
 ### Setup server:
 
@@ -64,13 +82,13 @@ ___________________________________________
 Create a new startup script (or use the one provided)
 
 ```bash
-nano /home/pi/Desktop/startup_script.sh
+nano /home/pi/Desktop/UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 ```
 
 Make the script executable
 
 ```bash
-chmod +x /path/startup_script.sh
+chmod +x /UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 ```
 
 
@@ -86,7 +104,7 @@ Description=Startup Script
 Type=simple
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/bin/bash /home/pi/Desktop/startup_script.sh
+ExecStart=/bin/bash /home/pi/Desktop/UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 
 [Install]
 WantedBy=default.target
