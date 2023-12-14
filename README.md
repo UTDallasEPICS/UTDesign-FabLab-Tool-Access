@@ -42,7 +42,7 @@ sudo apt install xterm
 
 Run the `FabFivePi.py` program and you should be done.
 
-Check out [here](#https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
+Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional#heading-ids) to autostart the program at bootup.
 
 
 
