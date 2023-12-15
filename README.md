@@ -25,12 +25,12 @@ _____
 
 > *Note: This guide assumes that you are cloning the repo into `home/pi/Desktop/` for raspberry pi.
 
-Clone main branch (into home/pi/Desktop for Pi):
+Clone main branch:
 ```
 git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git
 ```
 
-### Setup Access System:
+### Setup Tool Access System:
 
 All files under /Raspberry_Pi. (Other dirctories can be deleted)
 
@@ -42,7 +42,7 @@ sudo apt install xterm
 
 Run the `FabFivePi.py` program and you should be done.
 
-Check out [here](#https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
+Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional#heading-ids) to autostart the program at bootup.
 
 
 
