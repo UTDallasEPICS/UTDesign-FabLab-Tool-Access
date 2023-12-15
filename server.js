@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express'); // Import the ExpressJS framework
-const pool = require('./database.js');
+const pool = require('./Db/database.js');
 const papa = require('papaparse');
 
 let table = 'timelog'; //MySQL table name

@@ -1,6 +1,3 @@
 /Database/
 /Archived/
-/node_modules/
-.gitIgnore
-.FablabDatabase.sql
-.dockignore
+.gitignore

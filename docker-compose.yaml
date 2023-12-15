@@ -1,0 +1,32 @@
+
+services:
+  db:
+    image: mariadb:10.6.4-focal
+    container_name: mysql-server
+    environment:
+      MYSQL_DATABASE: fablab
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_AUTHENTICATION_PLUGIN: 'mysql_native_password'
+    networks:
+      - app-network
+    volumes:
+      - ./db/FablabDatabase.sql:/docker-entrypoint-initdb.d/FablabDatabase.sql
+    expose:
+      - 3306
+    ports:
+    - "3306:3306"
+  
+  node-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    depends_on:
+      - db
+    networks:
+      - app-network
+    ports: 
+      - 3000:3000
+
+networks:
+  app-network:
+    driver: bridge
