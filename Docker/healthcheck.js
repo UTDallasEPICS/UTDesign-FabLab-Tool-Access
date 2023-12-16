@@ -23,7 +23,7 @@ const healthcheck = () => {
 
 const tryConnect = async () => {
   let i;
-  for (i = 0; i < 5; i++) {
+  for (i = 0; i < 15; i++) {
     try {
       await healthcheck();
       console.log('Database is up, starting the application...');
