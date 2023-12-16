@@ -42,8 +42,7 @@ sudo apt install xterm
 
 Run the `FabFivePi.py` program and you should be done.
 
-Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional#heading-ids) to autostart the program at bootup.
-
+Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
 
 
 ### Setup server:
@@ -75,7 +74,16 @@ Make sure to also run the python server module
 ```
 python3 FFServer.py
 ```
+_____________________
 
+#### Using Docker Engine (Experimental)
+
+A dockerfile is added to make it easier to automatically bundle the installation process for the website and the database. But currently FFServer.py has to be manually installed along with the dockerfile.
+To build the dockerfile, run:
+```bash
+docker compose up --build
+```
+Read more `README.Docker.md`
 ___________________________________________
 
 ### Setup FabFivePi.py to auto start in Pi (Optional)
