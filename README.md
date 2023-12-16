@@ -52,9 +52,15 @@ Install Node (using nvm):
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
-```
+```bash
 nvm install node
 ```
+
+Install dependencies:
+```bash
+npm ci
+```
+
 To start web server:
 ```
 node server.js
