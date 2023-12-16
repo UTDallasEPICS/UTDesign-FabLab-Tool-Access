@@ -10,7 +10,7 @@ services:
     networks:
       - app-network
     volumes:
-      - ./db/FablabDatabase.sql:/docker-entrypoint-initdb.d/FablabDatabase.sql
+      - ./Db/FablabDatabase.sql:/docker-entrypoint-initdb.d/FablabDatabase.sql
     expose:
       - 3306
     ports:
