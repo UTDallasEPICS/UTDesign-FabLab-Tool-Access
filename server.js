@@ -19,8 +19,8 @@ async function clearOldRecords() {
       console.error('Error deleting old records:', error.message);
       return;
     } 
-    if (results.affectedRows > 0); {
-      console.log('Old records deleted successfully.');
+    if (results.affectedRows > 0) {
+      console.log(results.affectedRows, 'old records deleted.');
     }
   });
 }
