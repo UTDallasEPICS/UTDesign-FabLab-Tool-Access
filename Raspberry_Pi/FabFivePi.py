@@ -33,8 +33,8 @@ lcd = CharLCD('PCF8574', 0x27)
 
 card_numbers = {}
 
-machine_name = 'Bandsaw 1'
-minutes = 5  # change this to manipulate time
+machine_name = 'Bandsaw 1' # change according to the machine type
+minutes = 5  # change this to manipulate the time that machine will stay on
 seconds_per_minute = 1
 
 

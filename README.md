@@ -40,7 +40,9 @@ We'll be using xterm for our terminal output (used in startup_script.sh). You ca
 sudo apt install xterm
 ```
 
-Run the `FabFivePi.py` program and you should be done.
+In **FabFivePi.py**, make sure to change the default values for `machine_name = 'Bandsaw 1'` & `minutes = 5`
+
+Run `python3 FabFivePi.py`
 
 Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
 
