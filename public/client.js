@@ -117,6 +117,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  //Function that handles the search bar
+  const searchBar = document.querySelector('.search-bar');
+  const form = document.querySelector('form');
+  
+  //Event listner that sends a request to the server to search for the revelant data using await
+  form.addEventListener('submit', event => {
+    event.preventDefault(); //Prevent page reload
+    searchBar.addEventListener('keyup', async (e) => {
+      // Check if the key pressed was 'Enter'
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        const searchString = e.target.value.toLowerCase();
+        const response = await fetch(`/api/search?searchString=${encodeURIComponent(searchString)}`);
+        if (response.ok) {
+          const responseData = await response.json();
+          updateTable(responseData);
+        }
+      }
+    });
+  });
+
   // Function to handle month and day click
   const handleDateClick = (month, day) => {
 

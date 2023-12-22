@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express'); // Import the ExpressJS framework
-const pool = require('./database.js');
+const pool = require('./Db/database.js');
 const papa = require('papaparse');
 
 let table = 'timelog'; //MySQL table name
@@ -19,8 +19,8 @@ async function clearOldRecords() {
       console.error('Error deleting old records:', error.message);
       return;
     } 
-    if (results.affectedRows > 0); {
-      console.log('Old records deleted successfully.');
+    if (results.affectedRows > 0) {
+      console.log(results.affectedRows, 'old records deleted.');
     }
   });
 }
@@ -65,6 +65,33 @@ app.get('/', (req, res) => {
   });
 });
 
+//Search bar
+app.get('/api/search', (req, res) => {
+  const search = req.query.searchString;
+  if (!search) {
+    res.status(400).send('Missing required query parameter: search');
+    return;
+  }
+
+  let bool = -1;
+  if (search === 'yes') {
+    bool = 1;
+  } else if (search === 'no') {
+    bool = 0;
+  }
+
+  const selectQuery = `SELECT * FROM ${table} WHERE machineType LIKE ? OR userID LIKE ? OR adminStatus LIKE ? ORDER BY date DESC, logID DESC LIMIT ${limit}`;
+  //Prevent SQL injection
+  pool.query(selectQuery, ['%' + search + '%', '%' + search + '%', '%' + bool + '%'], (err, results, fields) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send('SQL Server Query Error.'); 
+      return;
+    }
+    //Send the filtered data to client (as JSON)
+    res.send(results);
+  });
+});
 
 //Go to home page
 app.get('/api/home', (req, res) => {
