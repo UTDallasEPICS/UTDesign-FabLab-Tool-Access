@@ -23,10 +23,29 @@ _____
 
 # Get started
 
+> *Note: This guide assumes that you are cloning the repo into `home/pi/Desktop/` for raspberry pi.
+
 Clone main branch:
 ```
 git clone https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access.git
 ```
+
+### Setup Tool Access System:
+
+All files under /Raspberry_Pi. (Other dirctories can be deleted)
+
+We'll be using xterm for our terminal output (used in startup_script.sh). You can use any terminal that supports detached terminal `-e` such as lxterminal.
+
+```bash
+sudo apt install xterm
+```
+
+In **FabFivePi.py**, make sure to change the default values for `machine_name = 'Bandsaw 1'` & `minutes = 5`
+
+Run `python3 FabFivePi.py`
+
+Check out [here](https://github.com/UTDallasEPICS/UTDesign-FabLab-Tool-Access?tab=readme-ov-file#setup-fabfivepipy-to-auto-start-in-pi-optional) to autostart the program at bootup.
+
 
 ### Setup server:
 
@@ -35,9 +54,15 @@ Install Node (using nvm):
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
-```
+```bash
 nvm install node
 ```
+
+Install dependencies:
+```bash
+npm ci
+```
+
 To start web server:
 ```
 node server.js
@@ -57,7 +82,16 @@ Make sure to also run the python server module
 ```
 python3 FFServer.py
 ```
+_____________________
 
+#### Using Docker Engine (Experimental)
+
+A dockerfile is added to make it easier to automatically bundle the installation process for the website and the database. But currently FFServer.py has to be manually installed along with the dockerfile.
+To build the dockerfile, run:
+```bash
+docker compose up --build
+```
+Read more `README.Docker.md`
 ___________________________________________
 
 ### Setup FabFivePi.py to auto start in Pi (Optional)
@@ -65,13 +99,13 @@ ___________________________________________
 Create a new startup script (or use the one provided)
 
 ```bash
-nano /home/pi/Desktop/startup_script.sh
+nano /home/pi/Desktop/UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 ```
 
 Make the script executable
 
 ```bash
-chmod +x /path/startup_script.sh
+chmod +x /UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 ```
 
 
@@ -87,7 +121,7 @@ Description=Startup Script
 Type=simple
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-ExecStart=/bin/bash /home/pi/Desktop/startup_script.sh
+ExecStart=/bin/bash /home/pi/Desktop/UTDesign-FabLab-Tool-Access/Raspberry_Pi/startup_script.sh
 
 [Install]
 WantedBy=default.target
